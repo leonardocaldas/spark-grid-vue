@@ -1,31 +1,37 @@
-import type {GridComponent} from "../types"
-import type {EventProxy, EventReceived} from "../types";
+import type { DataTableComponent } from "../types"
 
 export class EventEmitter {
-    static eventProxy: EventProxy|null|undefined = null;
-
-    static onRequestStarted(state: GridComponent) {
+    static onRequestStarted(state: DataTableComponent) {
         if (typeof state.config.onRequestStarted == "function") {
             state.config.onRequestStarted(state)
         }
     }
 
-    static onRequestFinished(response: any, state: GridComponent) {
+    static onRequestFinished(response: any, state: DataTableComponent) {
         if (typeof state.config.onRequestFinished == "function") {
             state.config.onRequestFinished(response, state)
         }
     }
 
-    static emit(grid: GridComponent, name: string, data: any): void {
+    private static events: Record<string, Function[]> = {}
+
+    static emit(grid: DataTableComponent, name: string, data: any): void {
         grid.$emit(name, data)
-        this.eventProxy?.emit(name, data)
+
+        if (this.events[name]) {
+            this.events[name].forEach(cb => cb(data))
+        }
     }
 
-    static on(name: string, data: EventReceived): void {
-        this.eventProxy?.on(name, data)
+    static on(event: string, callback: Function) {
+        if (!this.events[event]) {
+            this.events[event] = []
+        }
+        this.events[event].push(callback)
     }
 
-    static off(name: string, data: EventReceived): void {
-        this.eventProxy?.off(name, data)
+    static off(event: string, callback: Function) {
+        if (!this.events[event]) return
+        this.events[event] = this.events[event].filter(cb => cb !== callback)
     }
 }

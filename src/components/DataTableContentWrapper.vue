@@ -1,6 +1,6 @@
 <template>
-    <div class="spark-grid grid-wrapper">
-        <div class="spark-grid-body" :style="styles" :class="classes">
+    <div class="arcana-datatable grid-wrapper">
+        <div class="arcana-datatable-body" :style="styles" :class="classes">
             <slot name="main"></slot>
         </div>
 
@@ -9,10 +9,10 @@
 </template>
 
 <script setup lang="ts">
-import type {GridComponent} from "../types/types"
-import {computed} from "vue"
+import type { DataTableComponent } from "../types/types"
+import { computed } from "vue"
 
-const props = defineProps<{ grid: GridComponent }>()
+const props = defineProps<{ grid: DataTableComponent }>()
 
 const classes = computed(() => {
     let classes = []
@@ -45,6 +45,4 @@ const styles = computed(() => {
 })
 </script>
 
-<style>
-
-</style>
+<style></style>

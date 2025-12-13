@@ -1,6 +1,6 @@
-import type {Column, GridComponent} from "../types/types"
+import type { Column, DataTableComponent } from "../types/types"
 
-export class GridStyler {
+export class DataTableStyler {
     static getCheckboxColumnStyles(): object {
         return {
             "width": "60px",
@@ -13,12 +13,12 @@ export class GridStyler {
         }
     }
 
-    static getColumnStyle(column: Column, grid: GridComponent): object {
+    static getColumnStyle(column: Column, grid: DataTableComponent): object {
         let style: any = {}
         let width: any
 
         if (grid.config.calculateCellWidth && !column.width) {
-            width = GridStyler.calculateColumnWidth(grid)
+            width = DataTableStyler.calculateColumnWidth(grid)
         } else {
             width = column.width ?? grid.config.cellMinWidth
         }
@@ -38,27 +38,27 @@ export class GridStyler {
         return style
     }
 
-    static getBodyRowColumnStyle(column: Column, grid: GridComponent): object {
+    static getBodyRowColumnStyle(column: Column, grid: DataTableComponent): object {
         let style: any = grid.rowStyle ?? {
             "padding": "8px 10px"
         }
 
         return {
-            ...GridStyler.getColumnStyle(column, grid),
+            ...DataTableStyler.getColumnStyle(column, grid),
             ...style,
         }
     }
 
-    static getSearchRowColumnStyle(column: Column, grid: GridComponent): object {
-        return GridStyler.getColumnStyle(column, grid)
+    static getSearchRowColumnStyle(column: Column, grid: DataTableComponent): object {
+        return DataTableStyler.getColumnStyle(column, grid)
     }
 
-    static getHeaderRowColumnStyle(column: Column, grid: GridComponent): object {
-        return GridStyler.getColumnStyle(column, grid)
+    static getHeaderRowColumnStyle(column: Column, grid: DataTableComponent): object {
+        return DataTableStyler.getColumnStyle(column, grid)
     }
 
-    static getActionRowColumn(grid: GridComponent): object {
-        const width = GridStyler.calculateActionsWidth(grid);
+    static getActionRowColumn(grid: DataTableComponent): object {
+        const width = DataTableStyler.calculateActionsWidth(grid);
 
         return {
             "width": width,
@@ -71,11 +71,11 @@ export class GridStyler {
         }
     }
 
-    static calculateActionsWidth(grid: GridComponent): string | number {
+    static calculateActionsWidth(grid: DataTableComponent): string | number {
         return grid.config.actionsWidth ?? `${((grid.config.actions?.length ?? 0) * 50) + 50}px`
     }
 
-    static calculateColumnWidth(grid: GridComponent): string {
+    static calculateColumnWidth(grid: DataTableComponent): string {
         let columnsCount = grid.getColumns()
             .filter((c: Column) => !c.width)
             .length
@@ -84,7 +84,7 @@ export class GridStyler {
         if (grid.config.actions) {
             columnsCount += 1;
             actionsWidth = parseInt(
-                GridStyler.calculateActionsWidth(grid)
+                DataTableStyler.calculateActionsWidth(grid)
                     .toString()
                     .replace(/\D/g, "")
             )
@@ -106,7 +106,7 @@ export class GridStyler {
         return `calc(${baseWidthPercentage}% - ${dividedWidthPixels}px)`
     }
 
-    static getCellTextAlignment(column: Column, grid: GridComponent): object {
+    static getCellTextAlignment(column: Column, grid: DataTableComponent): object {
         const alignment: any = column.textAlignment ?? grid.config.textAlignment
 
         return {

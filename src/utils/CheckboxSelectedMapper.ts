@@ -1,7 +1,7 @@
-import type {Row, GridComponent} from "../types/types"
+import type { Row, DataTableComponent } from "../types/types"
 
 export class CheckboxSelectedMapper {
-    static map(row: Row, grid: GridComponent) {
+    static map(row: Row, grid: DataTableComponent): Row {
         if (typeof grid.config.isRowChecked == "function") {
             row._isChecked = grid.config.isRowChecked(row);
         }

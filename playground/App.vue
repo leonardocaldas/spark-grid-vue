@@ -1,7 +1,5 @@
 <template>
-    <SparkGrid
-        :config="grid"
-    />
+    <ArcanaDataTable :config="datatable" />
 </template>
 
 <style>
@@ -18,9 +16,9 @@ body {
 </style>
 
 <script lang="ts">
-import {Component} from "@vue/runtime-core";
-import {CellContent, Column, GridComponent, Row, SparkGridConfig} from "..";
-import {GridSearchType} from "../src";
+import { Component } from "@vue/runtime-core";
+import { CellContent, Column, DataTableComponent, Row, ArcanaDataTableConfig } from "..";
+import { DataTableSearchType } from "../src/values";
 
 export function pushSafe(obj, property, value): void {
     if (!obj[property]) {
@@ -44,7 +42,7 @@ export function spliceSafe(obj, property, value) {
 
 export default {
     computed: {
-        grid(): SparkGridConfig {
+        datatable(): ArcanaDataTableConfig {
             return {
                 url: 'http://localhost:3000/countries.json',
 
@@ -53,7 +51,7 @@ export default {
                 isRowChecked: (row: Row) => this.ids && this.ids.indexOf(row.id) !== -1,
                 checkboxEnabled: true,
 
-                onBeforeCellStyleMounted: (value: CellContent, column: Column, row: Row, grid: GridComponent) => {
+                onBeforeCellStyleMounted: (value: CellContent, column: Column, row: Row, grid: DataTableComponent) => {
                     if (row._isChecked || row._isRadioChecked) {
                         return {
                             'background-color': 'red !important',
@@ -64,7 +62,7 @@ export default {
                     return {}
                 },
 
-                onBeforeCheckboxAndRadioButtonStyleMounted: (row: Row, grid: GridComponent) => {
+                onBeforeCheckboxAndRadioButtonStyleMounted: (row: Row, grid: DataTableComponent) => {
                     if (row._isChecked || row._isRadioChecked) {
                         return {
                             'background-color': 'red !important',
@@ -76,21 +74,21 @@ export default {
                 },
 
                 columns: [
-                    {name: "id", label: "Id"},
-                    {name: "name", label: "Country"},
-                    {name: "iso3", label: "Iso3"},
-                    {name: "iso2", label: "Iso2"},
-                    {name: "numeric_code", label: "Numeric Code"},
-                    {name: "phone_code", label: "Phone Cede"},
+                    { name: "id", label: "Id" },
+                    { name: "name", label: "Country" },
+                    { name: "iso3", label: "Iso3" },
+                    { name: "iso2", label: "Iso2" },
+                    { name: "numeric_code", label: "Numeric Code" },
+                    { name: "phone_code", label: "Phone Cede" },
                     {
-                        name: "capital", label: "Capital", searchType: GridSearchType.LIST, searchConfig: async () => {
+                        name: "capital", label: "Capital", searchType: DataTableSearchType.LIST, searchConfig: async () => {
                             return [
-                                {label: "Teste", value: "Teste 1"},
-                                {label: "Teste 2", value: "Teste 2"}
+                                { label: "Teste", value: "Teste 1" },
+                                { label: "Teste 2", value: "Teste 2" }
                             ]
                         }
                     },
-                    {name: "currency", label: "Currency"},
+                    { name: "currency", label: "Currency" },
                 ]
             }
         }
@@ -103,4 +101,3 @@ export default {
     }
 } as Component
 </script>
-

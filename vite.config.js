@@ -1,6 +1,6 @@
-import {defineConfig} from 'vite';
+import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
-import {resolve} from 'path'
+import { resolve } from 'path'
 
 export default defineConfig({
     plugins: [vue()],
@@ -10,16 +10,17 @@ export default defineConfig({
 
         lib: {
             entry: resolve(__dirname, 'src/index.ts'),
-            name: 'SparkGrid',
-            fileName: (format) => `spark-grid.${format}.js`,
+            name: 'ArcanaDataTable',
+            fileName: (format) => `arcana-datatable.${format}.js`,
         },
 
         rollupOptions: {
             // Ensure dependencies are externalized to avoid bundling them
-            external: ['vue'],
+            external: ['vue', '@imengyu/vue3-context-menu'],
             output: {
                 globals: {
-                    vue: 'Vue', // Ensures Vue is properly recognized in UMD format
+                    vue: 'Vue',
+                    '@imengyu/vue3-context-menu': 'ContextMenu',
                 },
             },
         },

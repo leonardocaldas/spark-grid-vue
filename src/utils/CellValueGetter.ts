@@ -1,9 +1,9 @@
-import type {Row, Column, GridComponent} from "../types/types"
+import type { Row, Column, DataTableComponent } from "../types/types"
 // @ts-ignore
-import getValue from 'get-value'
+import { getValue } from './ObjectUtils'
 
 export class CellValueGetter {
-    static get(column: Column, row: Row, grid: GridComponent): any {
+    static get(column: Column, row: Row, grid: DataTableComponent): any {
         return () => {
             let value = getValue(row, column.name)
 
