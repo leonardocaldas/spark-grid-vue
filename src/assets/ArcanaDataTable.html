@@ -1,0 +1,14 @@
+<DataTableContentWrapper :grid="grid" v-loading="grid.loading">
+    <template #main>
+        <div>
+            <DataTableHeader :grid="grid"/>
+            <DataTableSearchRow :grid="grid" v-if="config.searchEnabled !== false"/>
+            <DataTableBody :grid="grid"/>
+            <DataTableSummarizer v-if="config.footerSummarizerEnabled" :grid="grid"/>
+        </div>
+    </template>
+
+    <template #footer>
+        <DataTableFooter v-if="config.footerVisible ?? true" :grid="grid"/>
+    </template>
+</DataTableContentWrapper>

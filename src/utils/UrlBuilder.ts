@@ -1,7 +1,7 @@
-import type {GridComponent} from "../types/types"
+import type { DataTableComponent } from "../types/types"
 
 export class UrlBuilder {
-    static getParams(grid: GridComponent): any {
+    static getParams(grid: DataTableComponent): any {
         const params: any = {
             ...(grid.config.initialFilters ?? {}),
             ...grid.filters,
@@ -26,13 +26,13 @@ export class UrlBuilder {
         return params
     }
 
-    static async getUrl(grid: GridComponent): Promise<string> {
+    static async getUrl(grid: DataTableComponent): Promise<string> {
         if (typeof grid.config.url == "function") {
             let urlFunction = grid.config.url()
 
             return urlFunction instanceof Promise ? await urlFunction : urlFunction
         }
 
-        return grid.config.url
+        return grid.config.url ?? ''
     }
 }

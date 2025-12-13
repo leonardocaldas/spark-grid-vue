@@ -1,10 +1,9 @@
-import {EventEmitter} from "../utils/EventEmitter"
-import {UrlBuilder} from "../utils/UrlBuilder"
-import Axios from "axios"
-import type {GridComponent} from "../types/types"
+import { EventEmitter } from "../utils/EventEmitter"
+import { UrlBuilder } from "../utils/UrlBuilder"
+import type { DataTableComponent } from "../types/types"
 
 export class DataFetcher {
-    static async fetch(this: GridComponent): Promise<void> {
+    static async fetch(this: DataTableComponent): Promise<void> {
         const showLoading: boolean = this.config.showLoadingDuringRequest ?? true
 
         EventEmitter.onRequestStarted(this)
@@ -35,18 +34,23 @@ export class DataFetcher {
         }
     }
 
-    static async _fetchData(this: GridComponent): Promise<any> {
+    static async _fetchData(this: DataTableComponent): Promise<any> {
         if (this.config.datasource) {
             return this.config.datasource(UrlBuilder.getParams(this))
         }
 
         const url: string = await UrlBuilder.getUrl(this)
-        const response: any = await Axios.get(url, {params: UrlBuilder.getParams(this)})
+        const params = UrlBuilder.getParams(this)
 
-        if (response.config && response.data && response.headers) {
-            return response.data
+        const queryString = new URLSearchParams(params).toString()
+        const fetchUrl = queryString ? `${url}${url.includes('?') ? '&' : '?'}${queryString} ` : url
+
+        const response = await fetch(fetchUrl)
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status} `)
         }
 
-        return response
+        return await response.json()
     }
 }

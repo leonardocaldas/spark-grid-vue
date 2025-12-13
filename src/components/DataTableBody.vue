@@ -4,23 +4,23 @@
             Nenhum registro encontrado.
         </div>
 
-        <GridRow v-for="row in rows" :row="row" :grid="grid" :key="row._uuid"/>
+        <DataTableRow v-for="row in rows" :row="row" :grid="grid" :key="row._uuid" />
     </div>
 </template>
 
 <script setup lang="ts">
-import GridRow from "./GridRow.vue"
-import type {GridComponent} from "../types/types"
-import {computed} from "vue"
+import DataTableRow from "./DataTableRow.vue"
+import type { DataTableComponent } from "../types/types"
+import { computed } from "vue"
 
 const props = defineProps<{
-    grid: GridComponent
+    grid: DataTableComponent
 }>()
 
 const rows = computed(() => props.grid.getRows())
 </script>
 
-<style scoped lang="scss">
+<style scoped>
 .empty-grid-placeholder {
     width: 100%;
     padding: 50px 0;

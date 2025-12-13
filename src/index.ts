@@ -1,13 +1,12 @@
-import type {App} from "vue";
-import SparkGridComponent from "./SparkGrid.vue";
-import type {InstallOptions} from "./types";
-import {EventEmitter} from "./utils/EventEmitter";
+import type { App } from "vue";
+import ArcanaDataTableComponent from "./ArcanaDataTable.vue";
+import type { InstallOptions } from "./types";
 
-export const SparkGrid: any = {
+export const ArcanaDataTable: any = {
     install(app: App, options: InstallOptions) {
-        app.component("SparkGrid", SparkGridComponent)
-        EventEmitter.eventProxy = options.eventProxy
+        app.component("ArcanaDataTable", ArcanaDataTableComponent)
     }
 }
 
-export * from "./types/enum"
+export * from "./values";
+export * from "./types";

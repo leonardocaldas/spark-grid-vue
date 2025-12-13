@@ -1,71 +1,49 @@
 <template>
-    <div :class="rowClasses"
-         class="grid-row flex"
-         @click="onClickRow"
-         @dblclick="onDoubleClickRow">
+    <div :class="rowClasses" class="grid-row flex" @click="onClickRow" @dblclick="onDoubleClickRow">
 
-        <GridCheckbox
-            :key="row._uuid"
-            v-if="props.grid.config.checkboxEnabled"
-            :row="row"
-            :grid="props.grid"
-            @change="onRowChecked"
-        />
+        <DataTableCheckbox :key="row._uuid" v-if="props.grid.config.checkboxEnabled" :row="row" :grid="props.grid"
+            @change="onRowChecked" />
 
-        <GridRadioButton
-            :key="row._uuid"
-            :grid="props.grid"
-            v-if="props.grid.config.radioButtonSelectionEnabled"
-            :row="row"
-            @selected="onRadioChecked"
-        />
+        <DataTableRadioButton :key="row._uuid" :grid="props.grid" v-if="props.grid.config.radioButtonSelectionEnabled"
+            :row="row" @selected="onRadioChecked" />
 
-        <div
-            class="grid-cell"
-            :class="GridStyler.getCellTextAlignment(column, grid)"
-            :id="column._uuid"
-            v-for="column in columns"
-            :style="columnStyle(column)"
-            @click="onClickCell"
-            @contextmenu.prevent="onContextMenu($event, column)"
-        >
-            <RuntimeRenderer
-                :key="`${row._uuid}:${column._uuid}`"
-                :content="valueGetter(column)"
-            />
+        <div class="grid-cell" :class="DataTableStyler.getCellTextAlignment(column, grid)" :id="column._uuid"
+            v-for="column in columns" :style="columnStyle(column)" @click="onClickCell"
+            @contextmenu.prevent="onContextMenu($event, column)">
+            <RuntimeRenderer :key="`${row._uuid}:${column._uuid}`" :content="valueGetter(column)" />
         </div>
 
-        <GridAction :grid="props.grid" :row="row" v-if="props.grid.config.actions"/>
+        <DataTableAction :grid="props.grid" :row="row" v-if="props.grid.config.actions" />
     </div>
 </template>
 
 <script setup lang="ts">
-import GridCheckbox from "./GridCheckbox.vue"
+import DataTableCheckbox from "./DataTableCheckbox.vue"
 import RuntimeRenderer from "./RuntimeRenderer.vue"
-import GridAction from "./GridAction.vue"
-import type {Column, GridComponent, Row} from "../types/types"
-import {GridStyler} from "../utils/GridStyler"
-import {computed, onUnmounted} from "vue"
-import {CellValueGetter} from "../utils/CellValueGetter"
+import DataTableAction from "./DataTableAction.vue"
+import type { Column, DataTableComponent, Row } from "../types/types"
+import { DataTableStyler } from "../utils/DataTableStyler"
+import { computed, onUnmounted } from "vue"
+import { CellValueGetter } from "../utils/CellValueGetter"
 import ContextMenu from "@imengyu/vue3-context-menu"
-import GridRadioButton from "./GridRadioButton.vue";
-import {EventEmitter} from "../utils/EventEmitter";
+import DataTableRadioButton from "./DataTableRadioButton.vue";
+import { EventEmitter } from "../utils/EventEmitter";
 
-const props = defineProps<{ row: Row, grid: GridComponent }>()
+const props = defineProps<{ row: Row, grid: DataTableComponent }>()
 
 const columnStyle = (column: Column) => {
-    const style = GridStyler.getBodyRowColumnStyle(column, props.grid)
+    let style = DataTableStyler.getBodyRowColumnStyle(column, props.grid)
 
     if (props.grid.config.onBeforeCellStyleMounted) {
         const newStyle = props.grid.config.onBeforeCellStyleMounted(valueGetter(column), column, props.row, props.grid)
 
-        return {...style, ...newStyle}
+        style = { ...style, ...newStyle }
     }
 
     if (column.onBeforeColumnStyleMounted) {
         const newStyle = column.onBeforeColumnStyleMounted(valueGetter(column), props.row, props.grid)
 
-        return {...style, ...newStyle}
+        style = { ...style, ...newStyle }
     }
 
     return style
@@ -103,14 +81,16 @@ const onClickCell = ($event: any) => {
         return
     }
 
-    target.classList.add("grid-cell-focused")
-    props.grid.focusedCell?.classList?.remove("grid-cell-focused")
-    props.grid.focusedCell = target
+    if (props.grid.config.cellFocusEnabled ?? true) {
+        target.classList.add("grid-cell-focused")
+        props.grid.focusedCell?.classList?.remove("grid-cell-focused")
+        props.grid.focusedCell = target
+    }
 }
 
 const onClickRow = () => {
     props.grid.config.onClickRow && props.grid.config.onClickRow(props.row, props.grid)
-    EventEmitter.emit(props.grid, "row-focused", {row: props.row})
+    EventEmitter.emit(props.grid, "row-focused", { row: props.row })
 }
 
 const onDoubleClickRow = () => props.grid.config.onDoubleClickRow && props.grid.config.onDoubleClickRow(props.row, props.grid)

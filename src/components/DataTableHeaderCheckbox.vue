@@ -1,28 +1,21 @@
 <template>
-    <div :style="GridStyler.getCheckboxColumnStyles()">
+    <div :style="DataTableStyler.getCheckboxColumnStyles()">
         <div class="checker">
-            <span :class="{'checked': hasAnyChecked}">
-                <input
-                    type="checkbox"
-                    :name="grid.uuid"
-                    @input="onChange($event.target.value)"
-                    class="styled"
-                    :disabled="isCheckboxHeaderDisabled"
-                    :value="hasAnyChecked"
-                    :checked="hasAnyChecked"
-                />
+            <span :class="{ 'checked': hasAnyChecked }">
+                <input type="checkbox" :name="grid.uuid" @input="onChange($event.target.value)" class="styled"
+                    :disabled="isCheckboxHeaderDisabled" :value="hasAnyChecked" :checked="hasAnyChecked" />
             </span>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import {GridStyler} from "../utils/GridStyler"
-import {GridComponent, IsCheckboxHeaderDisabled, Row} from "../types/types"
-import {computed} from "vue"
+import { DataTableStyler } from "../utils/DataTableStyler"
+import type { DataTableComponent, Row } from "../types/types"
+import { computed } from "vue"
 
 const props = defineProps<{
-    grid: GridComponent
+    grid: DataTableComponent
 }>()
 
 const hasAnyChecked = computed(() => {

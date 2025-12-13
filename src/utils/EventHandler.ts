@@ -1,22 +1,21 @@
-import type {Column, GridComponent, OrderBy, Row} from "../types"
-import {GridColumnType} from ".."
-import {UuidMapper} from "./UuidMapper"
+import type { Column, DataTableComponent, OrderBy, Row } from "../types"
+import { DataTableColumnType } from "../values"
+import { UuidMapper } from "./UuidMapper"
 // @ts-ignore
-import {v4 as uuid} from "uuid"
-import {isEmpty} from "./Conditionals"
-import {CheckboxSelectedMapper} from "./CheckboxSelectedMapper"
+import { isEmpty } from "./Conditionals"
+import { CheckboxSelectedMapper } from "./CheckboxSelectedMapper"
 // @ts-ignore
-import getValue from 'get-value'
-import type {ComponentPublicInstance} from "@vue/runtime-core";
-import {EventEmitter} from "./EventEmitter";
-import {RadioButtonSelectedMapper} from "./RadioButtonSelectedMapper";
+import { getValue } from "./ObjectUtils";
+import type { ComponentPublicInstance } from "@vue/runtime-core";
+import { EventEmitter } from "./EventEmitter";
+import { RadioButtonSelectedMapper } from "./RadioButtonSelectedMapper";
 
 export class EventHandler {
-    static refresh(this: GridComponent): void {
-        this.fetch()
+    static async refresh(this: DataTableComponent): Promise<void> {
+        await this.fetch()
     }
 
-    static setRows(this: GridComponent, rows: Row[]): Row[] {
+    static setRows(this: DataTableComponent, rows: Row[]): Row[] {
         rows = rows
             .map(UuidMapper.add)
             .map((row: Row) => CheckboxSelectedMapper.map(row, this))
@@ -33,53 +32,63 @@ export class EventHandler {
         return rows
     }
 
-    static isEmpty(this: GridComponent): boolean {
+    static isEmpty(this: DataTableComponent): boolean {
         return this.getRows().length === 0
     }
 
-    static isNotEmpty(this: GridComponent): boolean {
+    static isNotEmpty(this: DataTableComponent): boolean {
         return this.getRows().length > 0
     }
 
-    static addRow(this: GridComponent, row: Row): void {
-        this.setRows([...this.getRows(), {...row}])
+    static addRow(this: DataTableComponent, row: Row): void {
+        this.setRows([...this.getRows(), { ...row }])
     }
 
-    static updateRow(this: GridComponent, uuid: string, row: Row): void {
+    static updateRow(this: DataTableComponent, uuid: string, row: Row): void {
         this.rows = this.getRows().map((currentRow: Row) => {
             if (currentRow._uuid == uuid) {
-                currentRow = {...currentRow, ...row}
+                currentRow = { ...currentRow, ...row }
             }
 
             return currentRow
         })
     }
 
-    static clearRows(this: GridComponent): void {
+    static upsert(this: DataTableComponent, id: string, row: Row): void {
+        const exists = this.getRows().find((r: Row) => r._uuid == id)
+
+        if (exists) {
+            this.updateRow(id, row)
+        } else {
+            this.addRow(row)
+        }
+    }
+
+    static clearRows(this: DataTableComponent): void {
         this.rows = []
     }
 
-    static removeRow(this: GridComponent, uuid: string): void {
+    static removeRow(this: DataTableComponent, uuid: string): void {
         const newRows = this.getRows().filter((row: Row) => row._uuid != uuid)
 
         this.setRows(newRows)
     }
 
-    static getRows(this: GridComponent): Row[] {
+    static getRows(this: DataTableComponent): Row[] {
         return this.rows
     }
 
-    static getCheckedRows(this: GridComponent): Row[] {
+    static getCheckedRows(this: DataTableComponent): Row[] {
         return this.rows.filter((row: Row) => Boolean(row._isChecked));
     }
 
-    static clearCheckedRows(this: GridComponent): void {
+    static clearCheckedRows(this: DataTableComponent): void {
         this.rows.forEach((row: Row) => {
             row._isChecked = false
         });
     }
 
-    static getColumns(this: GridComponent): Column[] {
+    static getColumns(this: DataTableComponent): Column[] {
         let columns = this.config.columns
 
         if (typeof columns == "function") {
@@ -96,45 +105,49 @@ export class EventHandler {
             })
             .map((col: Column) => {
                 return {
-                    _uuid: uuid(),
+                    _uuid: crypto.randomUUID(),
                     ...col,
                 }
             })
     }
 
-    static applyFilter(this: GridComponent, column: Column, value: any): void {
+    static async applyFilter(this: DataTableComponent, column: Column, value: any): Promise<void> {
         this.setFilter(column.filterName || column.name, value)
         this.currentPage = 1
-        this.fetch()
+        await this.fetch()
     }
 
-    static setFilter(this: GridComponent & ComponentPublicInstance, name: string, value: any): void {
+    static setFilter(this: DataTableComponent & ComponentPublicInstance, name: string, value: any): void {
         value = isEmpty(value) ? "" : value
         this.filters[name] = value
         this.currentPage = 1
-        EventEmitter.emit(this, "grid-filter", {name: name, value, uuid: this.uuid})
+        EventEmitter.emit(this, "grid-filter", { name: name, value, uuid: this.uuid })
     }
 
-    static setFilters(this: GridComponent, filters: any): void {
+    static setFilters(this: DataTableComponent, filters: any): void {
         for (const filterName in filters) {
             this.setFilter(filterName, filters[filterName])
         }
     }
 
-    static paginate(this: GridComponent, page: number, rowsPerPage: number): void {
+    static getFilters(this: DataTableComponent): any {
+        return { ...this.filters }
+    }
+
+    static async paginate(this: DataTableComponent, page: number, rowsPerPage: number): Promise<void> {
         this.currentPage = page
         this.rowsPerPage = rowsPerPage
-        this.fetch()
+        await this.fetch()
     }
 
-    static applyOrderBy(this: GridComponent, orderBy: OrderBy): void {
+    static async applyOrderBy(this: DataTableComponent, orderBy: OrderBy): Promise<void> {
         this.orderBy = orderBy
-        this.fetch()
+        await this.fetch()
     }
 
-    static getSummarizedValue(this: GridComponent, column: Column, onlyIsChecked: boolean = true): any {
-        const isCurrency = column.type == GridColumnType.CURRENCY || (column.isCreatedDynamically && column.metadata?.value_formatter == "currency")
-        const isNumber = column.type == GridColumnType.NUMBER
+    static getSummarizedValue(this: DataTableComponent, column: Column, onlyIsChecked: boolean = true): any {
+        const isCurrency = column.type == DataTableColumnType.CURRENCY || (column.isCreatedDynamically && column.metadata?.value_formatter == "currency")
+        const isNumber = column.type == DataTableColumnType.NUMBER
 
         if (isCurrency || isNumber || column.summarizerValueGetter) {
             let value = this.getRows()
@@ -152,19 +165,22 @@ export class EventHandler {
                 .map(parseFloat)
                 .reduce((a: number, b: number) => a + b, 0)
 
-            return column.summarizerValueFormatter
-                ? column.summarizerValueFormatter(value)
-                : value
+            return {
+                raw: value,
+                formatted: column.summarizerValueFormatter
+                    ? column.summarizerValueFormatter(value)
+                    : value,
+            }
         }
 
         return null
     }
 
-    static getSelectedRadioRow(this: GridComponent) {
+    static getSelectedRadioRow(this: DataTableComponent) {
         return this._selectedRadioRow
     }
 
-    static setSelectedRadioRow(this: GridComponent, row: Row): void {
+    static setSelectedRadioRow(this: DataTableComponent, row: Row): void {
         this.clearRadioRowSelection()
 
         this.config.onRowChecked && this.config.onRowChecked(row, 'radio')
@@ -173,7 +189,7 @@ export class EventHandler {
         row._isRadioChecked = true
     }
 
-    static clearRadioRowSelection(this: GridComponent): void {
+    static clearRadioRowSelection(this: DataTableComponent): void {
         this._selectedRadioRow = null
 
         this.getRows()

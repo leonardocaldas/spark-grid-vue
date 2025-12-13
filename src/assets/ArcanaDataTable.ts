@@ -1,28 +1,28 @@
-import GridSearchRow from "../components/GridSearchRow.vue"
-import GridFooter from "../components/GridFooter.vue"
-import GridHeader from "../components/GridHeader.vue"
-import GridBody from "../components/GridBody.vue"
-import GridContentWrapper from "../components/GridContentWrapper.vue"
-import GridSummarizer from "../components/GridSummarizer.vue"
-import type {Component} from "@vue/runtime-core"
-import type {Props, SparkGridConfig} from "../types"
-import {DataFetcher} from "../utils/DataFetcher"
-import {EventHandler} from "../utils/EventHandler"
+import DataTableSearchRow from "../components/DataTableSearchRow.vue"
+import DataTableFooter from "../components/DataTableFooter.vue"
+import DataTableHeader from "../components/DataTableHeader.vue"
+import DataTableBody from "../components/DataTableBody.vue"
+import DataTableContentWrapper from "../components/DataTableContentWrapper.vue"
+import DataTableSummarizer from "../components/DataTableSummarizer.vue"
+import type { Component } from "@vue/runtime-core"
+import type { Props, ArcanaDataTableConfig } from "../types"
+import { DataFetcher } from "../utils/DataFetcher"
+import { EventHandler } from "../utils/EventHandler"
 // @ts-ignore
-import {v4 as uuidV4} from "uuid"
+import { v4 as uuidV4 } from "uuid"
 
 export default {
     emits: ['mounted'],
     props: ['config'],
-    name: "SparkGrid",
+    name: "ArcanaDataTable",
 
     components: {
-        GridFooter,
-        GridSearchRow,
-        GridSummarizer,
-        GridContentWrapper,
-        GridHeader,
-        GridBody,
+        DataTableFooter,
+        DataTableSearchRow,
+        DataTableSummarizer,
+        DataTableContentWrapper,
+        DataTableHeader,
+        DataTableBody,
     },
 
     data(): object {
@@ -48,6 +48,7 @@ export default {
         removeRow: EventHandler.removeRow,
         getRows: EventHandler.getRows,
         updateRow: EventHandler.updateRow,
+        upsert: EventHandler.upsert,
         getCheckedRows: EventHandler.getCheckedRows,
         clearCheckedRows: EventHandler.clearCheckedRows,
         isEmpty: EventHandler.isEmpty,
@@ -55,6 +56,7 @@ export default {
         getColumns: EventHandler.getColumns,
         setFilter: EventHandler.setFilter,
         setFilters: EventHandler.setFilters,
+        getFilters: EventHandler.getFilters,
         applyFilter: EventHandler.applyFilter,
         applyOrderBy: EventHandler.applyOrderBy,
         paginate: EventHandler.paginate,
@@ -73,7 +75,7 @@ export default {
     mounted() {
         this.$emit('mounted', this)
 
-        const config: SparkGridConfig = this.config
+        const config: ArcanaDataTableConfig = this.config
 
         if (config.sendRequestOnMounted !== false) {
             this.refresh()
