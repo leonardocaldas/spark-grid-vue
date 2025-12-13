@@ -9,20 +9,20 @@
         <div class="grid-header-cell"
              v-for="column in grid.getColumns()"
              :key="column.name + column.label"
-             @click="changeOrder(column.name)"
+             @click="changeOrder(column)"
              :class="{
-                 'grid-header-order': props.grid.config.orderByEnabled != false,
+                 'grid-header-order': props.grid.config.orderByEnabled != false && column.orderByEnabled != false,
                  ...GridStyler.getCellTextAlignment(column, grid),
              }"
              :style="GridStyler.getHeaderRowColumnStyle(column, props.grid)">
 
             <RuntimeRenderer :content="columnContent(column)"/>
 
-            <span v-if="isAscending(column.name)">
+            <span v-if="isAscending(column)">
                 <i class="fa-solid fa-sort-up"></i>
             </span>
 
-            <span v-else-if="isDescending(column.name)">
+            <span v-else-if="isDescending(column)">
                 <i class="fa-solid fa-sort-down"></i>
             </span>
 
@@ -45,24 +45,24 @@ import RuntimeRenderer from "./RuntimeRenderer.vue"
 import GridHeaderCheckbox from "./GridHeaderCheckbox.vue"
 import {GridStyler} from "../utils/GridStyler"
 import type {Column, GridComponent} from "../types/types"
-import {computed} from "vue"
 
 const props = defineProps<{ grid: GridComponent }>()
 
-const isSortedBy = (name: string) => props.grid.orderBy?.name === name
-const isAscending = (name: any) => isSortedBy(name) && props.grid.orderBy?.direction === "asc"
-const isDescending = (name: any) => isSortedBy(name) && props.grid.orderBy?.direction === "desc"
-const getSortDirection = (name: any) => isAscending(name) ? "desc" : "asc"
-const changeOrder = (name: any) => {
-    if (props.grid.config.orderByEnabled ?? true) {
+const isSortedBy = (column: Column) => props.grid.orderBy?.name === (column.filterName ?? column.name)
+const isAscending = (column: Column) => isSortedBy(column) && props.grid.orderBy?.direction === "asc"
+const isDescending = (column: Column) => isSortedBy(column) && props.grid.orderBy?.direction === "desc"
+const getSortDirection = (column: Column) => isAscending(column) ? "desc" : "asc"
+
+const changeOrder = (column: Column) => {
+    if (props.grid.config.orderByEnabled != false && column.orderByEnabled != false) {
+        const name = column.filterName ?? column.name
+
         props.grid.applyOrderBy({
             name,
-            direction: getSortDirection(name)
+            direction: getSortDirection(column)
         })
     }
 }
-
-const columns = computed(() => props.grid.config.columns)
 
 const columnContent = (column: Column) => {
     let label = null

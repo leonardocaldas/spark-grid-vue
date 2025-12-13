@@ -12,8 +12,8 @@ import {EventEmitter} from "./EventEmitter";
 import {RadioButtonSelectedMapper} from "./RadioButtonSelectedMapper";
 
 export class EventHandler {
-    static refresh(this: GridComponent): void {
-        this.fetch()
+    static async refresh(this: GridComponent): Promise<void> {
+        await this.fetch()
     }
 
     static setRows(this: GridComponent, rows: Row[]): Row[] {
@@ -53,6 +53,16 @@ export class EventHandler {
 
             return currentRow
         })
+    }
+
+    static upsert(this: GridComponent, id: string, row: Row): void {
+        const exists = this.getRows().find((r: Row) => r._uuid == id)
+
+        if (exists) {
+            this.updateRow(id, row)
+        } else {
+            this.addRow(row)
+        }
     }
 
     static clearRows(this: GridComponent): void {
@@ -102,10 +112,10 @@ export class EventHandler {
             })
     }
 
-    static applyFilter(this: GridComponent, column: Column, value: any): void {
+    static async applyFilter(this: GridComponent, column: Column, value: any): Promise<void> {
         this.setFilter(column.filterName || column.name, value)
         this.currentPage = 1
-        this.fetch()
+        await this.fetch()
     }
 
     static setFilter(this: GridComponent & ComponentPublicInstance, name: string, value: any): void {
@@ -121,15 +131,19 @@ export class EventHandler {
         }
     }
 
-    static paginate(this: GridComponent, page: number, rowsPerPage: number): void {
-        this.currentPage = page
-        this.rowsPerPage = rowsPerPage
-        this.fetch()
+    static getFilters(this: GridComponent): any {
+        return {...this.filters}
     }
 
-    static applyOrderBy(this: GridComponent, orderBy: OrderBy): void {
+    static async paginate(this: GridComponent, page: number, rowsPerPage: number): Promise<void> {
+        this.currentPage = page
+        this.rowsPerPage = rowsPerPage
+        await this.fetch()
+    }
+
+    static async applyOrderBy(this: GridComponent, orderBy: OrderBy): Promise<void> {
         this.orderBy = orderBy
-        this.fetch()
+        await this.fetch()
     }
 
     static getSummarizedValue(this: GridComponent, column: Column, onlyIsChecked: boolean = true): any {
@@ -152,9 +166,12 @@ export class EventHandler {
                 .map(parseFloat)
                 .reduce((a: number, b: number) => a + b, 0)
 
-            return column.summarizerValueFormatter
-                ? column.summarizerValueFormatter(value)
-                : value
+            return {
+                raw: value,
+                formatted: column.summarizerValueFormatter
+                    ? column.summarizerValueFormatter(value)
+                    : value,
+            }
         }
 
         return null

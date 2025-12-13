@@ -12,7 +12,7 @@
                 v-if="column.searchEnabled ?? true"
                 :type="column.searchType"
                 :search-config="column.searchConfig"
-                :name="column.name"
+                :name="column.filterName ??column.name"
                 :disabled="isDisabled(column)"
                 :uuid="grid.uuid"
                 @change="value => onFilterChanged(column, value)"

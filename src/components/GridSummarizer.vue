@@ -26,5 +26,5 @@ import RuntimeRenderer from "../components/RuntimeRenderer.vue"
 
 const props = defineProps<{ grid: GridComponent }>()
 
-const getSummarizedValue = (column: Column) => props.grid.getSummarizedValue(column)
+const getSummarizedValue = (column: Column) => props.grid.getSummarizedValue(column)?.formatted
 </script>

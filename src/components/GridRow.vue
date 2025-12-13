@@ -54,18 +54,18 @@ import {EventEmitter} from "../utils/EventEmitter";
 const props = defineProps<{ row: Row, grid: GridComponent }>()
 
 const columnStyle = (column: Column) => {
-    const style = GridStyler.getBodyRowColumnStyle(column, props.grid)
+    let style = GridStyler.getBodyRowColumnStyle(column, props.grid)
 
     if (props.grid.config.onBeforeCellStyleMounted) {
         const newStyle = props.grid.config.onBeforeCellStyleMounted(valueGetter(column), column, props.row, props.grid)
 
-        return {...style, ...newStyle}
+        style = {...style, ...newStyle}
     }
 
     if (column.onBeforeColumnStyleMounted) {
         const newStyle = column.onBeforeColumnStyleMounted(valueGetter(column), props.row, props.grid)
 
-        return {...style, ...newStyle}
+        style = {...style, ...newStyle}
     }
 
     return style
@@ -103,9 +103,11 @@ const onClickCell = ($event: any) => {
         return
     }
 
-    target.classList.add("grid-cell-focused")
-    props.grid.focusedCell?.classList?.remove("grid-cell-focused")
-    props.grid.focusedCell = target
+    if (props.grid.config.cellFocusEnabled ?? true) {
+        target.classList.add("grid-cell-focused")
+        props.grid.focusedCell?.classList?.remove("grid-cell-focused")
+        props.grid.focusedCell = target
+    }
 }
 
 const onClickRow = () => {

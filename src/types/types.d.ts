@@ -79,6 +79,11 @@ export type Action = {
 export type ComputedColumn = () => Column[]
 export type UniqueKeyIdentifier = (row: Row) => string
 
+export type SummarizedValue = {
+    raw: any,
+    formatted: any,
+}
+
 export type SparkGridConfig = {
     url?: string | function,
     datasource?: (params: any) => any[],
@@ -96,6 +101,7 @@ export type SparkGridConfig = {
     summarizeOnlyChecked?: boolean,
     useFlexbox?: boolean,
     rowFocusEnabled?: boolean,
+    cellFocusEnabled?: boolean,
     orderByEnabled?: boolean,
     checkboxEnabled?: boolean,
     isRowsPerPageVisible?: boolean,
@@ -155,24 +161,25 @@ export type State = {
 }
 
 export type Methods = {
-    refresh: () => void,
-    fetch: () => void,
+    refresh: () => Promise<void>,
+    fetch: () => Promise<void>,
     setRows: (rows: Row[]) => Rows[],
     clearRows: () => void,
     removeRow: (uuid: string) => void,
     addRow: (row: Row) => void,
+    upsert: (uuid: string, row: Row) => void,
     updateRow: (uuid: string, row: Row) => void,
     getRows: () => Rows[],
     getCheckedRows: () => Rows[],
     isEmpty: () => boolean,
     isNotEmpty: () => boolean,
     getColumns: () => Column[],
-    applyFilter: (column: Column, value: any) => void,
-    applyOrderBy: (orderBy: OrderBy) => void,
+    applyFilter: (column: Column, value: any) => Promise<void>,
+    applyOrderBy: (orderBy: OrderBy) => Promise<void>,
     setFilter: (name: string, value: any) => void,
     setFilters: (filters: object) => void,
-    paginate: (page: number, rowsPerPage: number) => void,
-    getSummarizedValue: (column: Column, onlyIsChecked: boolean = true) => any,
+    paginate: (page: number, rowsPerPage: number) => Promise<void>,
+    getSummarizedValue: (column: Column, onlyIsChecked: boolean = true) => SummarizedValue,
     getSelectedRadioRow: () => Row | null,
     clearRadioRowSelection: () => void,
     clearCheckedRows: () => void,
