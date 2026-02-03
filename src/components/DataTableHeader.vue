@@ -1,16 +1,16 @@
 <template>
-    <div class="datatable-header" :class="{ 'datatable-header-sticky': grid.config.stickyHeaderEnabled }">
-        <th class="datatable-header-cell" v-if="props.grid.config.checkboxEnabled"
+    <div class="spark-grid-datatable-header" :class="{ 'spark-grid-datatable-header-sticky': grid.config.stickyHeaderEnabled }">
+        <th class="spark-grid-datatable-header-cell" v-if="props.grid.config.checkboxEnabled"
             :style="DataTableStyler.getCheckboxColumnStyles()">
             <DataTableHeaderCheckbox :grid="grid" />
         </th>
 
-        <th class="datatable-header-cell" v-if="props.grid.config.radioButtonSelectionEnabled"
+        <th class="spark-grid-datatable-header-cell" v-if="props.grid.config.radioButtonSelectionEnabled"
             :style="DataTableStyler.getCheckboxColumnStyles()"></th>
 
-        <div class="datatable-header-cell" v-for="column in grid.getColumns()" :key="column.name + column.label"
+        <div class="spark-grid-datatable-header-cell" v-for="column in grid.getColumns()" :key="column.name + column.label"
             @click="changeOrder(column)" :class="{
-                'datatable-header-order': props.grid.config.orderByEnabled != false && column.orderByEnabled != false,
+                'spark-grid-datatable-header-order': props.grid.config.orderByEnabled != false && column.orderByEnabled != false,
                 ...DataTableStyler.getCellTextAlignment(column, grid),
             }" :style="DataTableStyler.getHeaderRowColumnStyle(column, props.grid)">
 
@@ -30,7 +30,7 @@
         </div>
 
         <div :style="DataTableStyler.getActionRowColumn(props.grid)" v-if="props.grid.config.actions"
-            class="text-center datatable-header-cell">
+            class="text-center spark-grid-datatable-header-cell">
             Ações
         </div>
     </div>

@@ -1,5 +1,5 @@
 <template>
-    <div class="grid-cell" :style="columnStyle()">
+    <div class="grid-cell" data-label="Selecionar" :style="columnStyle()">
         <div class="choice">
             <span :class="{ 'checked': row._isRadioChecked }">
                 <input type="radio" :id="row._uuid" :name="grid.uuid" :disabled="disabled" @input="emits('selected')"

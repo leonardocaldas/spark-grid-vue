@@ -1,5 +1,5 @@
 <template>
-    <div class="datatable-cell" :style="DataTableStyler.getActionRowColumn(grid)">
+    <div class="spark-grid-datatable-cell" data-label="Ações" :style="DataTableStyler.getActionRowColumn(grid)">
         <template v-for="(action, i) in grid.config.actions">
             <RuntimeRenderer v-if="isVisible(action)" :key="`${row._uuid}:_actions`" :content="action.element(row)" />
         </template>

@@ -1,20 +1,20 @@
 <template>
-    <div class="datatable-date-input">
+    <div class="spark-grid-datatable-date-input">
         <!-- Single date input -->
         <input v-if="type === 'date'" type="date" :value="formattedValue" @input="onDateInput" :disabled="disabled"
-            class="datatable-input" />
+            class="spark-grid-datatable-input" />
 
         <!-- Month picker -->
         <input v-else-if="type === 'month'" type="month" :value="formattedMonthValue" @input="onMonthInput"
-            :disabled="disabled" class="datatable-input" />
+            :disabled="disabled" class="spark-grid-datatable-input" />
 
         <!-- Date range -->
-        <div v-else-if="type === 'daterange'" class="datatable-date-range">
+        <div v-else-if="type === 'daterange'" class="spark-grid-datatable-date-range">
             <input type="date" :value="rangeStart" @input="onRangeStartInput" :disabled="disabled"
-                class="datatable-input datatable-input-range" placeholder="Data início" />
-            <span class="datatable-date-separator">-</span>
+                class="spark-grid-datatable-input spark-grid-datatable-input-range" placeholder="Data início" />
+            <span class="spark-grid-datatable-date-separator">-</span>
             <input type="date" :value="rangeEnd" @input="onRangeEndInput" :disabled="disabled"
-                class="datatable-input datatable-input-range" placeholder="Data fim" />
+                class="spark-grid-datatable-input spark-grid-datatable-input-range" placeholder="Data fim" />
         </div>
     </div>
 </template>
@@ -108,11 +108,11 @@ const onRangeEndInput = (event: Event) => {
 </script>
 
 <style scoped>
-.datatable-date-input {
+.spark-grid-datatable-date-input {
     width: 100%;
 }
 
-.datatable-input {
+.spark-grid-datatable-input {
     width: 100%;
     padding: 8px 12px;
     border: 1px solid #dcdfe6;
@@ -122,55 +122,55 @@ const onRangeEndInput = (event: Event) => {
     transition: border-color 0.2s;
 }
 
-.datatable-input:hover {
+.spark-grid-datatable-input:hover {
     border-color: #c0c4cc;
 }
 
-.datatable-input:focus {
+.spark-grid-datatable-input:focus {
     outline: none;
     border-color: #409eff;
 }
 
-.datatable-input:disabled {
+.spark-grid-datatable-input:disabled {
     background-color: #f5f7fa;
     cursor: not-allowed;
     color: #c0c4cc;
 }
 
-.datatable-date-range {
+.spark-grid-datatable-date-range {
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
-.datatable-input-range {
+.spark-grid-datatable-input-range {
     flex: 1;
 }
 
-.datatable-date-separator {
+.spark-grid-datatable-date-separator {
     color: #909399;
     font-size: 12px;
 }
 
 /* Mobile responsive */
 @media screen and (max-width: 480px) {
-    .datatable-input {
+    .spark-grid-datatable-input {
         min-height: 40px;
         font-size: 14px;
     }
 
-    .datatable-date-range {
+    .spark-grid-datatable-date-range {
         flex-direction: column;
         gap: 4px;
     }
 
-    .datatable-date-separator {
+    .spark-grid-datatable-date-separator {
         display: none;
     }
 }
 
 @media (hover: none) and (pointer: coarse) {
-    .datatable-input {
+    .spark-grid-datatable-input {
         min-height: 44px;
     }
 }

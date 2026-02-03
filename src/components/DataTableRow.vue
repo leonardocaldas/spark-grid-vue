@@ -4,7 +4,24 @@
          @click="onClickRow"
          @dblclick="onDoubleClickRow">
 
-        <GridCheckbox
+        <div v-if="hasRowAction" class="spark-grid-datatable-row-action-bar">
+            <button
+                type="button"
+                class="spark-grid-datatable-row-action"
+                @click.stop="onRowAction"
+                aria-label="Visualizar registro"
+            >
+                <span class="spark-grid-datatable-row-action-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                        <path d="M10 5h9v9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M19 5 9 15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M5 9v10h10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </span>
+            </button>
+        </div>
+
+        <DataTableCheckbox
             :key="row._uuid"
             v-if="props.grid.config.checkboxEnabled"
             :row="row"
@@ -12,7 +29,7 @@
             @change="onRowChecked"
         />
 
-        <GridRadioButton
+        <DataTableRadioButton
             :key="row._uuid"
             :grid="props.grid"
             v-if="props.grid.config.radioButtonSelectionEnabled"
@@ -22,9 +39,10 @@
 
         <div
             class="grid-cell"
-            :class="GridStyler.getCellTextAlignment(column, grid)"
+            :class="DataTableStyler.getCellTextAlignment(column, grid)"
             :id="column._uuid"
             v-for="column in columns"
+            :data-label="column.label"
             :style="columnStyle(column)"
             @click="onClickCell"
             @contextmenu.prevent="onContextMenu($event, column)"
@@ -35,26 +53,26 @@
             />
         </div>
 
-        <GridAction :grid="props.grid" :row="row" v-if="props.grid.config.actions"/>
+        <DataTableAction :grid="props.grid" :row="row" v-if="props.grid.config.actions"/>
     </div>
 </template>
 
 <script setup lang="ts">
-import GridCheckbox from "./GridCheckbox.vue"
+import DataTableCheckbox from "./DataTableCheckbox.vue"
 import RuntimeRenderer from "./RuntimeRenderer.vue"
-import GridAction from "./GridAction.vue"
+import DataTableAction from "./DataTableAction.vue"
 import type {Column, GridComponent, Row} from "../types/types"
-import {GridStyler} from "../utils/GridStyler"
+import { DataTableStyler } from "../utils/DataTableStyler"
 import {computed, onUnmounted} from "vue"
 import {CellValueGetter} from "../utils/CellValueGetter"
 import ContextMenu from "@imengyu/vue3-context-menu"
-import GridRadioButton from "./GridRadioButton.vue";
+import DataTableRadioButton from "./DataTableRadioButton.vue";
 import {EventEmitter} from "../utils/EventEmitter";
 
 const props = defineProps<{ row: Row, grid: GridComponent }>()
 
 const columnStyle = (column: Column) => {
-    let style = GridStyler.getBodyRowColumnStyle(column, props.grid)
+    let style = DataTableStyler.getBodyRowColumnStyle(column, props.grid)
 
     if (props.grid.config.onBeforeCellStyleMounted) {
         const newStyle = props.grid.config.onBeforeCellStyleMounted(valueGetter(column), column, props.row, props.grid)
@@ -116,6 +134,17 @@ const onClickRow = () => {
 }
 
 const onDoubleClickRow = () => props.grid.config.onDoubleClickRow && props.grid.config.onDoubleClickRow(props.row, props.grid)
+
+const hasRowAction = computed(() => Boolean(props.grid.config.onDoubleClickRow || props.grid.config.onClickRow))
+
+const onRowAction = () => {
+    if (props.grid.config.onDoubleClickRow) {
+        onDoubleClickRow()
+        return
+    }
+
+    onClickRow()
+}
 
 const onContextMenu = ($event: any, column: Column) => {
     onClickRow()

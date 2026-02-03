@@ -1,11 +1,14 @@
 <template>
     <div class="grid-row grid-search-row">
-        <div class="datatable-header-cell form-group-sm" v-if="props.grid.config.checkboxEnabled"
+        <div class="spark-grid-datatable-header-cell form-group-sm" v-if="props.grid.config.checkboxEnabled"
+            data-label="Selecionar"
             :style="DataTableStyler.getCheckboxColumnStyles()"></div>
-        <div class="datatable-header-cell form-group-sm" v-if="props.grid.config.radioButtonSelectionEnabled"
+        <div class="spark-grid-datatable-header-cell form-group-sm" v-if="props.grid.config.radioButtonSelectionEnabled"
+            data-label="Selecionar"
             :style="DataTableStyler.getCheckboxColumnStyles()"></div>
 
-        <div class="datatable-header-cell form-group-sm" v-for="column in grid.getColumns()" :key="column.name"
+        <div class="spark-grid-datatable-header-cell form-group-sm" v-for="column in grid.getColumns()" :key="column.name"
+            :data-label="column.label"
             :style="DataTableStyler.getSearchRowColumnStyle(column, props.grid)">
             <DataTableSearchField v-if="column.searchEnabled ?? true" :type="column.searchType"
                 :search-config="column.searchConfig" :name="column.filterName ?? column.name"
@@ -13,7 +16,8 @@
         </div>
 
         <div :style="DataTableStyler.getActionRowColumn(props.grid)" v-if="props.grid.config.actions"
-            class="datatable-header-cell form-group-sm"></div>
+            data-label="Ações"
+            class="spark-grid-datatable-header-cell form-group-sm"></div>
 
         <!--        <th v-if="hasActions" class="text-center"></th>-->
     </div>

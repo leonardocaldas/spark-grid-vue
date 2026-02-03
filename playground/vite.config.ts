@@ -12,7 +12,7 @@ export default defineConfig({
         }
     },
     server: {
-        open: true, // Automatically open the browser
+        open: false, // Disable auto-open for headless workflows
         port: 3000  // Port for the playground server
     },
     build: {

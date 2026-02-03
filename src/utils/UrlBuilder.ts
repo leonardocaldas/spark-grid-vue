@@ -1,4 +1,5 @@
 import type { DataTableComponent } from "../types/types"
+import { GlobalConfig } from "./GlobalConfig"
 
 export class UrlBuilder {
     static getParams(grid: DataTableComponent): any {
@@ -30,9 +31,30 @@ export class UrlBuilder {
         if (typeof grid.config.url == "function") {
             let urlFunction = grid.config.url()
 
-            return urlFunction instanceof Promise ? await urlFunction : urlFunction
+            const resolved = urlFunction instanceof Promise ? await urlFunction : urlFunction
+            return UrlBuilder.applyBaseUrl(resolved)
         }
 
-        return grid.config.url ?? ''
+        return UrlBuilder.applyBaseUrl(grid.config.url ?? '')
+    }
+
+    static applyBaseUrl(url: string): string {
+        const baseUrl = GlobalConfig.baseUrl
+        if (!baseUrl) {
+            return url
+        }
+
+        if (!url) {
+            return baseUrl
+        }
+
+        if (url.startsWith("http://") || url.startsWith("https://")) {
+            return url
+        }
+
+        const normalizedBase = baseUrl.endsWith("/") ? baseUrl.slice(0, -1) : baseUrl
+        const normalizedUrl = url.startsWith("/") ? url : `/${url}`
+
+        return `${normalizedBase}${normalizedUrl}`
     }
 }

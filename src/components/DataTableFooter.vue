@@ -1,11 +1,11 @@
 <template>
     <div class="grid-footer">
-        <div class="arcana-datatable-pages">
-            <div v-show="isRowsPerPageVisible" class="arcana-datatable__page-details">Por página:</div>
-            <div v-show="isRowsPerPageVisible" class="arcana-datatable__select">
+        <div class="spark-grid-pages">
+            <div v-show="isRowsPerPageVisible" class="spark-grid__page-details">Por página:</div>
+            <div v-show="isRowsPerPageVisible" class="spark-grid__select">
                 <select :value="grid.rowsPerPage"
                     @change="(e) => rowsPerPageChanged(Number((e.target as HTMLSelectElement).value))"
-                    class="datatable-select">
+                    class="spark-grid-datatable-select">
                     <option :value="10">10</option>
                     <option :value="25">25</option>
                     <option :value="50">50</option>
@@ -23,7 +23,7 @@
                 Exibindo {{ beginningRows() }} a {{ endingRows() }} de {{ grid.totalRows }} registro(s)
             </span>
 
-            <span class="arcana-datatable-selected-rows">
+            <span class="spark-grid-selected-rows">
                 <span v-if="selectedRowsLength > 0 && grid.config.checkboxEnabled">{{ selectedRowsLength }} registro(s)
                     selecionado(s)</span>
             </span>
@@ -103,29 +103,29 @@ const selectedRowsLength = computed(() => props.grid.getCheckedRows().length)
 </script>
 
 <style scoped>
-.arcana-datatable-pages {
+.spark-grid-pages {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
     gap: 8px;
 }
 
-.arcana-datatable__page-details {
+.spark-grid__page-details {
     display: inline-block;
 }
 
-.arcana-datatable__select {
+.spark-grid__select {
     width: 80px;
     margin-left: 10px;
     margin-right: 10px;
     display: inline-block;
 }
 
-.arcana-datatable-icon-arrow-left:before {
+.spark-grid-icon-arrow-left:before {
     content: "\f053";
 }
 
-.arcana-datatable-selected-rows {
+.spark-grid-selected-rows {
     margin-left: 25px;
     flex: 1;
     text-align: center;
@@ -135,17 +135,17 @@ const selectedRowsLength = computed(() => props.grid.getCheckedRows().length)
 
 /* Tablet responsive */
 @media screen and (max-width: 768px) {
-    .arcana-datatable-pages {
+    .spark-grid-pages {
         justify-content: space-between;
         width: 100%;
     }
 
-    .arcana-datatable__select {
+    .spark-grid__select {
         margin-left: 5px;
         margin-right: 5px;
     }
 
-    .arcana-datatable-selected-rows {
+    .spark-grid-selected-rows {
         margin-left: 0;
         width: 100%;
         order: 3;
@@ -154,22 +154,22 @@ const selectedRowsLength = computed(() => props.grid.getCheckedRows().length)
 
 /* Mobile responsive */
 @media screen and (max-width: 480px) {
-    .arcana-datatable-pages {
+    .spark-grid-pages {
         flex-direction: column;
         align-items: center;
         gap: 12px;
     }
 
-    .arcana-datatable__page-details {
+    .spark-grid__page-details {
         text-align: center;
     }
 
-    .arcana-datatable__select {
+    .spark-grid__select {
         width: 100px;
         margin: 0;
     }
 
-    .arcana-datatable-selected-rows {
+    .spark-grid-selected-rows {
         margin: 0;
         text-align: center;
     }

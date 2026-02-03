@@ -4,8 +4,9 @@ import DataTableHeader from "../components/DataTableHeader.vue"
 import DataTableBody from "../components/DataTableBody.vue"
 import DataTableContentWrapper from "../components/DataTableContentWrapper.vue"
 import DataTableSummarizer from "../components/DataTableSummarizer.vue"
+import DataTableMobileFilters from "../components/DataTableMobileFilters.vue"
 import type { Component } from "@vue/runtime-core"
-import type { Props, ArcanaDataTableConfig } from "../types"
+import type { Props, SparkGridConfig } from "../types"
 import { DataFetcher } from "../utils/DataFetcher"
 import { EventHandler } from "../utils/EventHandler"
 // @ts-ignore
@@ -14,7 +15,7 @@ import { v4 as uuidV4 } from "uuid"
 export default {
     emits: ['mounted'],
     props: ['config'],
-    name: "ArcanaDataTable",
+    name: "SparkGrid",
 
     components: {
         DataTableFooter,
@@ -23,6 +24,7 @@ export default {
         DataTableContentWrapper,
         DataTableHeader,
         DataTableBody,
+        DataTableMobileFilters,
     },
 
     data(): object {
@@ -75,7 +77,7 @@ export default {
     mounted() {
         this.$emit('mounted', this)
 
-        const config: ArcanaDataTableConfig = this.config
+        const config: SparkGridConfig = this.config
 
         if (config.sendRequestOnMounted !== false) {
             this.refresh()

@@ -1,6 +1,6 @@
 <template>
-    <div class="arcana-datatable grid-wrapper">
-        <div class="arcana-datatable-body" :style="styles" :class="classes">
+    <div class="spark-grid grid-wrapper">
+        <div class="spark-grid-body" :style="styles" :class="classes">
             <slot name="main"></slot>
         </div>
 

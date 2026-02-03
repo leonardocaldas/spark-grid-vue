@@ -1,5 +1,5 @@
 import type {Column, GridComponent, OrderBy, Row} from "../types"
-import {GridColumnType} from ".."
+import { DataTableColumnType } from ".."
 import {UuidMapper} from "./UuidMapper"
 // @ts-ignore
 import {v4 as uuid} from "uuid"
@@ -147,8 +147,8 @@ export class EventHandler {
     }
 
     static getSummarizedValue(this: GridComponent, column: Column, onlyIsChecked: boolean = true): any {
-        const isCurrency = column.type == GridColumnType.CURRENCY || (column.isCreatedDynamically && column.metadata?.value_formatter == "currency")
-        const isNumber = column.type == GridColumnType.NUMBER
+        const isCurrency = column.type == DataTableColumnType.CURRENCY || (column.isCreatedDynamically && column.metadata?.value_formatter == "currency")
+        const isNumber = column.type == DataTableColumnType.NUMBER
 
         if (isCurrency || isNumber || column.summarizerValueGetter) {
             let value = this.getRows()

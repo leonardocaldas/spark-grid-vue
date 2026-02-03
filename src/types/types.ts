@@ -41,6 +41,7 @@ export type OnBeforeCheckboxAndRadioButtonStyleMounted = (row: Row, grid: GridCo
 export type OnBeforeColumnStyleMounted = (value: CellContent, row: Row, grid: GridComponent) => { [key: string]: any }
 export type OnVisibleCheck = () => boolean
 export type OnVisibleActionCheck = (row: Row) => boolean
+export type UrlResolver = () => string | Promise<string>
 
 export type SearchConfigListValue = {
     value: any,
@@ -85,7 +86,7 @@ export type SummarizedValue = {
 }
 
 export type SparkGridConfig = {
-    url?: string | function,
+    url?: string | UrlResolver,
     datasource?: (params: any) => any[],
     height?: number,
     rowsPerPage?: number,
@@ -136,6 +137,8 @@ export type SparkGridConfig = {
     uniqueKeyIdentifier?: string | UniqueKeyIdentifier,
 }
 
+export type ArcanaDataTableConfig = SparkGridConfig
+
 export type Row = {
     _uuid?: string,
     _hasFocus?: boolean,
@@ -163,14 +166,14 @@ export type State = {
 export type Methods = {
     refresh: () => Promise<void>,
     fetch: () => Promise<void>,
-    setRows: (rows: Row[]) => Rows[],
+    setRows: (rows: Row[]) => Row[],
     clearRows: () => void,
     removeRow: (uuid: string) => void,
     addRow: (row: Row) => void,
     upsert: (uuid: string, row: Row) => void,
     updateRow: (uuid: string, row: Row) => void,
-    getRows: () => Rows[],
-    getCheckedRows: () => Rows[],
+    getRows: () => Row[],
+    getCheckedRows: () => Row[],
     isEmpty: () => boolean,
     isNotEmpty: () => boolean,
     getColumns: () => Column[],
@@ -179,7 +182,7 @@ export type Methods = {
     setFilter: (name: string, value: any) => void,
     setFilters: (filters: object) => void,
     paginate: (page: number, rowsPerPage: number) => Promise<void>,
-    getSummarizedValue: (column: Column, onlyIsChecked: boolean = true) => SummarizedValue,
+    getSummarizedValue: (column: Column, onlyIsChecked?: boolean) => SummarizedValue,
     getSelectedRadioRow: () => Row | null,
     clearRadioRowSelection: () => void,
     clearCheckedRows: () => void,
@@ -187,7 +190,18 @@ export type Methods = {
 }
 
 export type GridComponent = State & Methods & ComponentPublicInstance
+export type DataTableComponent = GridComponent
 
 export type Props = {
     config: SparkGridConfig
+}
+
+export type InstallOptions = {
+    baseUrl?: string
+    eventProxy?: {
+        emit: (...args: any[]) => void
+        on: (...args: any[]) => void
+        off: (...args: any[]) => void
+    }
+    request?: (url: string, params: Record<string, any>, baseUrl?: string) => Promise<any>
 }

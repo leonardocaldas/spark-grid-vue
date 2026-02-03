@@ -1,5 +1,6 @@
 import { EventEmitter } from "../utils/EventEmitter"
 import { UrlBuilder } from "../utils/UrlBuilder"
+import { GlobalConfig } from "./GlobalConfig"
 import type { DataTableComponent } from "../types/types"
 
 export class DataFetcher {
@@ -42,8 +43,12 @@ export class DataFetcher {
         const url: string = await UrlBuilder.getUrl(this)
         const params = UrlBuilder.getParams(this)
 
+        if (GlobalConfig.request) {
+            return GlobalConfig.request(url, params, GlobalConfig.baseUrl)
+        }
+
         const queryString = new URLSearchParams(params).toString()
-        const fetchUrl = queryString ? `${url}${url.includes('?') ? '&' : '?'}${queryString} ` : url
+        const fetchUrl = queryString ? `${url}${url.includes('?') ? '&' : '?'}${queryString}` : url
 
         const response = await fetch(fetchUrl)
 

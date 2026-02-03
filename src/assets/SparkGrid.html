@@ -1,6 +1,7 @@
 <DataTableContentWrapper :grid="grid" v-loading="grid.loading">
     <template #main>
         <div>
+            <DataTableMobileFilters :grid="grid" v-if="config.searchEnabled !== false" />
             <DataTableHeader :grid="grid"/>
             <DataTableSearchRow :grid="grid" v-if="config.searchEnabled !== false"/>
             <DataTableBody :grid="grid"/>

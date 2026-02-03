@@ -44,12 +44,15 @@ export default {
     computed: {
         datatable(): ArcanaDataTableConfig {
             return {
-                url: 'http://localhost:3000/countries.json',
+                url: () => `${window.location.origin}/countries.json`,
 
                 onRowChecked: (row: Row) => pushSafe(this, "ids", row.id),
                 onRowUnchecked: (row: Row) => spliceSafe(this, "ids", row.id),
                 isRowChecked: (row: Row) => this.ids && this.ids.indexOf(row.id) !== -1,
                 checkboxEnabled: true,
+                onDoubleClickRow: (row: Row) => {
+                    alert(row.id)
+                },
 
                 onBeforeCellStyleMounted: (value: CellContent, column: Column, row: Row, grid: DataTableComponent) => {
                     if (row._isChecked || row._isRadioChecked) {
