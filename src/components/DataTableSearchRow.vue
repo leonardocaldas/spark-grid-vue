@@ -1,22 +1,20 @@
 <template>
     <div class="grid-row grid-search-row">
         <div class="spark-grid-datatable-header-cell form-group-sm" v-if="props.grid.config.checkboxEnabled"
-            data-label="Selecionar"
-            :style="DataTableStyler.getCheckboxColumnStyles()"></div>
+            data-label="Selecionar" :style="DataTableStyler.getCheckboxColumnStyles()"></div>
         <div class="spark-grid-datatable-header-cell form-group-sm" v-if="props.grid.config.radioButtonSelectionEnabled"
-            data-label="Selecionar"
-            :style="DataTableStyler.getCheckboxColumnStyles()"></div>
+            data-label="Selecionar" :style="DataTableStyler.getCheckboxColumnStyles()"></div>
 
-        <div class="spark-grid-datatable-header-cell form-group-sm" v-for="column in grid.getColumns()" :key="column.name"
-            :data-label="column.label"
+        <div class="spark-grid-datatable-header-cell form-group-sm" v-for="column in grid.getColumns()"
+            :key="column.name" :data-label="column.label"
             :style="DataTableStyler.getSearchRowColumnStyle(column, props.grid)">
             <DataTableSearchField v-if="column.searchEnabled ?? true" :type="column.searchType"
                 :search-config="column.searchConfig" :name="column.filterName ?? column.name"
-                :disabled="isDisabled(column)" :uuid="grid.uuid" @change="value => onFilterChanged(column, value)" />
+                :disabled="isDisabled(column)" :uuid="grid.uuid" :emits-events="true"
+                @change="value => onFilterChanged(column, value)" />
         </div>
 
-        <div :style="DataTableStyler.getActionRowColumn(props.grid)" v-if="props.grid.config.actions"
-            data-label="Ações"
+        <div :style="DataTableStyler.getActionRowColumn(props.grid)" v-if="props.grid.config.actions" data-label="Ações"
             class="spark-grid-datatable-header-cell form-group-sm"></div>
 
         <!--        <th v-if="hasActions" class="text-center"></th>-->

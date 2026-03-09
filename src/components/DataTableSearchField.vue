@@ -20,10 +20,11 @@
     </div>
 </template>
 
-<script setup lang="ts">    
-import { computed, onMounted, ref, watch } from "vue"
+<script setup lang="ts">
+import { computed, onMounted, onUnmounted, ref, watch } from "vue"
 import { DataTableSearchType } from "../values/column"
 import { SearchConfigListValue, DataTableSearchTypeDefinition } from "@/types";
+import { EventEmitter } from "../utils/EventEmitter";
 import MultiSelect from "./MultiSelect.vue";
 import InputText from "./InputText.vue";
 import InputDate from "./InputDate.vue";
@@ -103,9 +104,25 @@ const loadSearchConfig = async () => {
     }
 }
 
+const onGridFilterChanged = (data: any) => {
+    if (data.name === props.name) {
+        filterValue.value = data.value
+    }
+}
+
 onMounted(() => {
     filterValue.value = props.modelValue
     loadSearchConfig()
+
+    if (props.emitsEvents) {
+        EventEmitter.on("grid-filter", onGridFilterChanged)
+    }
+})
+
+onUnmounted(() => {
+    if (props.emitsEvents) {
+        EventEmitter.off("grid-filter", onGridFilterChanged)
+    }
 })
 
 </script>

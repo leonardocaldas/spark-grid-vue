@@ -1,5 +1,12 @@
 <template>
-    <ArcanaDataTable :config="datatable" />
+    <div>
+        <div style="margin-bottom: 16px; display: flex; gap: 8px;">
+            <button @click="applyFilter">Set Filter (name = "Brazil")</button>
+            <button @click="clearFilter">Clear Filter</button>
+        </div>
+
+        <SparkGrid :config="datatable" ref="grid" />
+    </div>
 </template>
 
 <style>
@@ -17,89 +24,31 @@ body {
 
 <script lang="ts">
 import { Component } from "@vue/runtime-core";
-import { CellContent, Column, DataTableComponent, Row, ArcanaDataTableConfig } from "..";
-import { DataTableSearchType } from "../src/values";
-
-export function pushSafe(obj, property, value): void {
-    if (!obj[property]) {
-        obj[property] = []
-    }
-
-    obj[property].push(value)
-}
-
-export function spliceSafe(obj, property, value) {
-    if (!obj[property]) {
-        obj[property] = []
-    }
-
-    let indexOf = obj[property].indexOf(value)
-
-    if (indexOf !== -1) {
-        obj[property].splice(indexOf, 1)
-    }
-}
+import type { Column, SparkGridConfig } from "..";
 
 export default {
     computed: {
-        datatable(): ArcanaDataTableConfig {
+        datatable(): SparkGridConfig {
             return {
                 url: () => `${window.location.origin}/countries.json`,
-
-                onRowChecked: (row: Row) => pushSafe(this, "ids", row.id),
-                onRowUnchecked: (row: Row) => spliceSafe(this, "ids", row.id),
-                isRowChecked: (row: Row) => this.ids && this.ids.indexOf(row.id) !== -1,
-                checkboxEnabled: true,
-                onDoubleClickRow: (row: Row) => {
-                    alert(row.id)
-                },
-
-                onBeforeCellStyleMounted: (value: CellContent, column: Column, row: Row, grid: DataTableComponent) => {
-                    if (row._isChecked || row._isRadioChecked) {
-                        return {
-                            'background-color': 'red !important',
-                            'color': 'white !important'
-                        }
-                    }
-
-                    return {}
-                },
-
-                onBeforeCheckboxAndRadioButtonStyleMounted: (row: Row, grid: DataTableComponent) => {
-                    if (row._isChecked || row._isRadioChecked) {
-                        return {
-                            'background-color': 'red !important',
-                            'color': 'white !important'
-                        }
-                    }
-
-                    return {}
-                },
-
                 columns: [
-                    { name: "id", label: "Id" },
+                    { name: "id", label: "Id", width: "80px" },
                     { name: "name", label: "Country" },
                     { name: "iso3", label: "Iso3" },
                     { name: "iso2", label: "Iso2" },
-                    { name: "numeric_code", label: "Numeric Code" },
-                    { name: "phone_code", label: "Phone Cede" },
-                    {
-                        name: "capital", label: "Capital", searchType: DataTableSearchType.LIST, searchConfig: async () => {
-                            return [
-                                { label: "Teste", value: "Teste 1" },
-                                { label: "Teste 2", value: "Teste 2" }
-                            ]
-                        }
-                    },
+                    { name: "capital", label: "Capital" },
                     { name: "currency", label: "Currency" },
                 ]
             }
         }
     },
 
-    data() {
-        return {
-            ids: [1, 2, 3, 4],
+    methods: {
+        applyFilter() {
+            this.$refs.grid.setFilters({ "name": "Brazil" })
+        },
+        clearFilter() {
+            this.$refs.grid.setFilter("name", "")
         }
     }
 } as Component

@@ -1,15 +1,15 @@
-import type {Column, GridComponent, OrderBy, Row} from "../types"
+import type { Column, GridComponent, OrderBy, Row } from "../types"
 import { DataTableColumnType } from ".."
-import {UuidMapper} from "./UuidMapper"
+import { UuidMapper } from "./UuidMapper"
 // @ts-ignore
-import {v4 as uuid} from "uuid"
-import {isEmpty} from "./Conditionals"
-import {CheckboxSelectedMapper} from "./CheckboxSelectedMapper"
+import { v4 as uuid } from "uuid"
+import { isEmpty } from "./Conditionals"
+import { CheckboxSelectedMapper } from "./CheckboxSelectedMapper"
 // @ts-ignore
 import getValue from 'get-value'
-import type {ComponentPublicInstance} from "@vue/runtime-core";
-import {EventEmitter} from "./EventEmitter";
-import {RadioButtonSelectedMapper} from "./RadioButtonSelectedMapper";
+import type { ComponentPublicInstance } from "@vue/runtime-core";
+import { EventEmitter } from "./EventEmitter";
+import { RadioButtonSelectedMapper } from "./RadioButtonSelectedMapper";
 
 export class EventHandler {
     static async refresh(this: GridComponent): Promise<void> {
@@ -17,6 +17,8 @@ export class EventHandler {
     }
 
     static setRows(this: GridComponent, rows: Row[]): Row[] {
+        if (!Array.isArray(rows)) rows = []
+
         rows = rows
             .map(UuidMapper.add)
             .map((row: Row) => CheckboxSelectedMapper.map(row, this))
@@ -42,13 +44,13 @@ export class EventHandler {
     }
 
     static addRow(this: GridComponent, row: Row): void {
-        this.setRows([...this.getRows(), {...row}])
+        this.setRows([...this.getRows(), { ...row }])
     }
 
     static updateRow(this: GridComponent, uuid: string, row: Row): void {
         this.rows = this.getRows().map((currentRow: Row) => {
             if (currentRow._uuid == uuid) {
-                currentRow = {...currentRow, ...row}
+                currentRow = { ...currentRow, ...row }
             }
 
             return currentRow
@@ -122,7 +124,7 @@ export class EventHandler {
         value = isEmpty(value) ? "" : value
         this.filters[name] = value
         this.currentPage = 1
-        EventEmitter.emit(this, "grid-filter", {name: name, value, uuid: this.uuid})
+        EventEmitter.emit(this, "grid-filter", { name: name, value, uuid: this.uuid })
     }
 
     static setFilters(this: GridComponent, filters: any): void {
@@ -132,7 +134,7 @@ export class EventHandler {
     }
 
     static getFilters(this: GridComponent): any {
-        return {...this.filters}
+        return { ...this.filters }
     }
 
     static async paginate(this: GridComponent, page: number, rowsPerPage: number): Promise<void> {

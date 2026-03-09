@@ -10,8 +10,8 @@ export default defineConfig({
 
         lib: {
             entry: resolve(__dirname, 'src/index.ts'),
-            name: 'ArcanaDataTable',
-            fileName: (format) => `arcana-datatable.${format}.js`,
+            name: 'SparkGridVue',
+            fileName: (format) => `spark-grid-vue.${format}.js`,
         },
 
         rollupOptions: {

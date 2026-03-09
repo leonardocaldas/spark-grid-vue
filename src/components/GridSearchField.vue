@@ -4,4 +4,6 @@
 
 <script setup lang="ts">
 import DataTableSearchField from "./DataTableSearchField.vue"
+
+defineOptions({ inheritAttrs: false })
 </script>

@@ -1,26 +1,62 @@
 <template>
-    <div class="spark-grid-datatable-date-input">
+    <div class="spark-grid-datatable-date-input" @mouseenter="hovered = true" @mouseleave="hovered = false">
         <!-- Single date input -->
-        <input v-if="type === 'date'" type="date" :value="formattedValue" @input="onDateInput" :disabled="disabled"
-            class="spark-grid-datatable-input" />
+        <div v-if="type === 'date'" class="spark-grid-input-wrapper">
+            <input type="date" :value="formattedValue" @input="onDateInput" :disabled="disabled"
+                class="spark-grid-datatable-input" :class="{ 'has-clear': showClearSingle }" />
+            <span v-if="showClearSingle" class="spark-grid-input-clear" @click="clearSingle">
+                <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="currentColor"
+                        d="m466.752 512-90.496-90.496a32 32 0 0 1 45.248-45.248L512 466.752l90.496-90.496a32 32 0 1 1 45.248 45.248L557.248 512l90.496 90.496a32 32 0 1 1-45.248 45.248L512 557.248l-90.496 90.496a32 32 0 0 1-45.248-45.248L466.752 512z" />
+                    <path fill="currentColor"
+                        d="M512 896a384 384 0 1 0 0-768 384 384 0 0 0 0 768zm0 64a448 448 0 1 1 0-896 448 448 0 0 1 0 896z" />
+                </svg>
+            </span>
+        </div>
 
         <!-- Month picker -->
-        <input v-else-if="type === 'month'" type="month" :value="formattedMonthValue" @input="onMonthInput"
-            :disabled="disabled" class="spark-grid-datatable-input" />
+        <div v-else-if="type === 'month'" class="spark-grid-input-wrapper">
+            <input type="month" :value="formattedMonthValue" @input="onMonthInput" :disabled="disabled"
+                class="spark-grid-datatable-input" :class="{ 'has-clear': showClearSingle }" />
+            <span v-if="showClearSingle" class="spark-grid-input-clear" @click="clearSingle">
+                <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="currentColor"
+                        d="m466.752 512-90.496-90.496a32 32 0 0 1 45.248-45.248L512 466.752l90.496-90.496a32 32 0 1 1 45.248 45.248L557.248 512l90.496 90.496a32 32 0 1 1-45.248 45.248L512 557.248l-90.496 90.496a32 32 0 0 1-45.248-45.248L466.752 512z" />
+                    <path fill="currentColor"
+                        d="M512 896a384 384 0 1 0 0-768 384 384 0 0 0 0 768zm0 64a448 448 0 1 1 0-896 448 448 0 0 1 0 896z" />
+                </svg>
+            </span>
+        </div>
 
         <!-- Date range -->
         <div v-else-if="type === 'daterange'" class="spark-grid-datatable-date-range">
-            <input type="date" :value="rangeStart" @input="onRangeStartInput" :disabled="disabled"
-                class="spark-grid-datatable-input spark-grid-datatable-input-range" placeholder="Data início" />
+            <div class="spark-grid-input-wrapper spark-grid-datatable-input-range">
+                <input type="date" :value="rangeStart" @input="onRangeStartInput" :disabled="disabled"
+                    class="spark-grid-datatable-input" :class="{ 'has-clear': showClearRange }"
+                    placeholder="Data início" />
+            </div>
             <span class="spark-grid-datatable-date-separator">-</span>
-            <input type="date" :value="rangeEnd" @input="onRangeEndInput" :disabled="disabled"
-                class="spark-grid-datatable-input spark-grid-datatable-input-range" placeholder="Data fim" />
+            <div class="spark-grid-input-wrapper spark-grid-datatable-input-range">
+                <input type="date" :value="rangeEnd" @input="onRangeEndInput" :disabled="disabled"
+                    class="spark-grid-datatable-input" :class="{ 'has-clear': showClearRange }"
+                    placeholder="Data fim" />
+            </div>
+            <span v-if="showClearRange" class="spark-grid-input-clear spark-grid-input-clear-range" @click="clearRange">
+                <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="currentColor"
+                        d="m466.752 512-90.496-90.496a32 32 0 0 1 45.248-45.248L512 466.752l90.496-90.496a32 32 0 1 1 45.248 45.248L557.248 512l90.496 90.496a32 32 0 1 1-45.248 45.248L512 557.248l-90.496 90.496a32 32 0 0 1-45.248-45.248L466.752 512z" />
+                    <path fill="currentColor"
+                        d="M512 896a384 384 0 1 0 0-768 384 384 0 0 0 0 768zm0 64a448 448 0 1 1 0-896 448 448 0 0 1 0 896z" />
+                </svg>
+            </span>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
+
+const hovered = ref(false)
 
 const props = defineProps<{
     modelValue?: string | Date | [string, string] | [Date, Date] | null
@@ -32,6 +68,26 @@ const emit = defineEmits<{
     (e: 'update:modelValue', value: string | [string, string] | null): void
     (e: 'change', value: string | [string, string] | null): void
 }>()
+
+const showClearSingle = computed(() => {
+    return hovered.value && !props.disabled && props.modelValue !== null && props.modelValue !== undefined && props.modelValue !== ''
+})
+
+const showClearRange = computed(() => {
+    if (!hovered.value || props.disabled) return false
+    if (!Array.isArray(props.modelValue)) return false
+    return props.modelValue[0] || props.modelValue[1]
+})
+
+const clearSingle = () => {
+    emit('update:modelValue', null)
+    emit('change', null)
+}
+
+const clearRange = () => {
+    emit('update:modelValue', ['', ''])
+    emit('change', ['', ''])
+}
 
 // Format date value for native input
 const formattedValue = computed(() => {
@@ -112,14 +168,23 @@ const onRangeEndInput = (event: Event) => {
     width: 100%;
 }
 
+.spark-grid-input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
 .spark-grid-datatable-input {
     width: 100%;
-    padding: 8px 12px;
+    padding: 5px 12px;
     border: 1px solid #dcdfe6;
     border-radius: 4px;
     font-size: 12px;
     background: white;
     transition: border-color 0.2s;
+}
+
+.spark-grid-datatable-input.has-clear {
+    padding-right: 24px;
 }
 
 .spark-grid-datatable-input:hover {
@@ -135,6 +200,36 @@ const onRangeEndInput = (event: Event) => {
     background-color: #f5f7fa;
     cursor: not-allowed;
     color: #c0c4cc;
+}
+
+.spark-grid-input-clear {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #c0c4cc;
+    transition: color 0.2s;
+}
+
+.spark-grid-input-clear:hover {
+    color: #909399;
+}
+
+.spark-grid-input-clear svg {
+    width: 14px;
+    height: 14px;
+}
+
+.spark-grid-input-clear-range {
+    position: relative;
+    right: auto;
+    top: auto;
+    transform: none;
+    flex-shrink: 0;
 }
 
 .spark-grid-datatable-date-range {

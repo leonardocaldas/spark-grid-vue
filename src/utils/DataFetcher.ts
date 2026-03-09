@@ -23,8 +23,9 @@ export class DataFetcher {
                 this.totalRows = response.total
                 this.currentPage = response.page
             } else {
-                this.setRows(response)
-                this.totalRows = response.length
+                const rows = Array.isArray(response) ? response : []
+                this.setRows(rows)
+                this.totalRows = rows.length
                 this.currentPage = 1
             }
 

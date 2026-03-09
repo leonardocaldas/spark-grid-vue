@@ -1,4 +1,5 @@
 import type { DataTableComponent } from "../types"
+import { GlobalConfig } from "./GlobalConfig"
 
 export class EventEmitter {
     static onRequestStarted(state: DataTableComponent) {
@@ -13,25 +14,16 @@ export class EventEmitter {
         }
     }
 
-    private static events: Record<string, Function[]> = {}
-
     static emit(grid: DataTableComponent, name: string, data: any): void {
         grid.$emit(name, data)
-
-        if (this.events[name]) {
-            this.events[name].forEach(cb => cb(data))
-        }
+        GlobalConfig.eventProxy?.emit(name, data)
     }
 
     static on(event: string, callback: Function) {
-        if (!this.events[event]) {
-            this.events[event] = []
-        }
-        this.events[event].push(callback)
+        GlobalConfig.eventProxy?.on(event, callback)
     }
 
     static off(event: string, callback: Function) {
-        if (!this.events[event]) return
-        this.events[event] = this.events[event].filter(cb => cb !== callback)
+        GlobalConfig.eventProxy?.off(event, callback)
     }
 }
