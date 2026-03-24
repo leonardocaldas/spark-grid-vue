@@ -109,6 +109,7 @@ export type SparkGridConfig = {
     radioButtonSelectionEnabled?: boolean,
     searchEnabled?: boolean,
     overflowEnabled?: boolean,
+    responsiveMode?: 'HORIZONTAL_OVERFLOW' | 'VERTICAL_RECORD',
     showLoadingDuringRequest?: boolean,
     sendRequestOnMounted?: boolean,
 

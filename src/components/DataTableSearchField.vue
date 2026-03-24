@@ -1,18 +1,22 @@
 <template>
     <div class="has-feedback has-feedback-left">
-        <InputText v-if="!type" v-model="filterValue" @keyup.enter="search" @change="search" :disabled="disabled" />
+        <ElInput v-if="!type" v-model="filterValue" @keyup.enter="search" @change="search" :disabled="disabled"
+            clearable size="small" />
 
-        <InputDate :disabled="disabled" v-model="filterValue" @change="search()" v-if="isDate" :type="dateType" />
+        <ElDatePicker :disabled="disabled" v-model="filterValue" @change="search()" v-if="isDate" :type="dateType"
+            size="small" clearable value-format="YYYY-MM-DD" format="DD/MM/YYYY"
+            start-placeholder="Data início" end-placeholder="Data fim" />
 
-        <select v-if="isType(DataTableSearchType.BOOLEAN)" v-model="filterValue" class="form-control pl-sm pr-sm"
-            :disabled="disabled" @change="search()">
-            <option value=""></option>
-            <option value="0">Não</option>
-            <option value="1">Sim</option>
-        </select>
+        <ElSelect v-if="isType(DataTableSearchType.BOOLEAN)" v-model="filterValue" :disabled="disabled"
+            @change="search()" clearable size="small" placeholder="">
+            <ElOption label="Não" value="0" />
+            <ElOption label="Sim" value="1" />
+        </ElSelect>
 
-        <MultiSelect v-if="isType(DataTableSearchType.LIST)" v-model="filterValue" :options="filterListValues"
-            :disabled="disabled" class="multiple-select-form pr-sm" @change="search()" />
+        <ElSelect v-if="isType(DataTableSearchType.LIST)" v-model="filterValue" :disabled="disabled"
+            @change="search()" multiple clearable size="small" collapse-tags placeholder="Selecione...">
+            <ElOption v-for="item in filterListValues" :key="item.value" :label="item.label" :value="item.value" />
+        </ElSelect>
 
         <div v-if="showSearchIcon" class="form-control-feedback">
             <i class="icon-search4 text-size-base"></i>
@@ -25,9 +29,11 @@ import { computed, onMounted, onUnmounted, ref, watch } from "vue"
 import { DataTableSearchType } from "../values/column"
 import { SearchConfigListValue, DataTableSearchTypeDefinition } from "@/types";
 import { EventEmitter } from "../utils/EventEmitter";
-import MultiSelect from "./MultiSelect.vue";
-import InputText from "./InputText.vue";
-import InputDate from "./InputDate.vue";
+import { ElInput, ElDatePicker, ElSelect, ElOption } from "element-plus";
+import "element-plus/es/components/input/style/css";
+import "element-plus/es/components/date-picker/style/css";
+import "element-plus/es/components/select/style/css";
+import "element-plus/es/components/option/style/css";
 
 const filterValue = ref<any>(null)
 const filterListValues = ref<SearchConfigListValue[]>([])

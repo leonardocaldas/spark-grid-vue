@@ -1,5 +1,5 @@
 <template>
-    <div class="spark-grid grid-wrapper">
+    <div class="spark-grid grid-wrapper" :class="wrapperClasses">
         <div class="spark-grid-body" :style="styles" :class="classes">
             <slot name="main"></slot>
         </div>
@@ -10,9 +10,40 @@
 
 <script setup lang="ts">
 import type { DataTableComponent } from "../types/types"
-import { computed } from "vue"
+import { ResponsiveMode } from "../values/column"
+import { computed, ref, onMounted, onUnmounted } from "vue"
 
 const props = defineProps<{ grid: DataTableComponent }>()
+
+const MOBILE_BREAKPOINT = 768
+const isMobile = ref(false)
+
+const checkMobile = () => {
+    isMobile.value = window.innerWidth <= MOBILE_BREAKPOINT
+}
+
+onMounted(() => {
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+})
+
+onUnmounted(() => {
+    window.removeEventListener('resize', checkMobile)
+})
+
+const responsiveMode = computed(() => {
+    return props.grid.config.responsiveMode ?? ResponsiveMode.HORIZONTAL_OVERFLOW
+})
+
+const wrapperClasses = computed(() => {
+    const cls: string[] = []
+
+    if (responsiveMode.value === ResponsiveMode.VERTICAL_RECORD) {
+        cls.push('spark-grid-responsive-vertical')
+    }
+
+    return cls
+})
 
 const classes = computed(() => {
     let classes = []
@@ -29,7 +60,10 @@ const styles = computed(() => {
         background: '#fafafa'
     }
 
-    if (props.grid.config.overflowEnabled) {
+    const isOverflowEnabled = props.grid.config.overflowEnabled
+        || (responsiveMode.value === ResponsiveMode.HORIZONTAL_OVERFLOW && isMobile.value)
+
+    if (isOverflowEnabled) {
         const maxHeight = props.grid.config.height ?? (window.innerHeight - 100)
 
         styles['overflow-x'] = 'auto'

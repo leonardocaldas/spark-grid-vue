@@ -75,12 +75,12 @@ const pagination = () => {
 }
 
 const pagesLeft = () => {
-    const iteration = props.grid.currentPage - 5
+    const iteration = props.grid.currentPage - 2
     return iteration >= 1 ? iteration : 1
 }
 
 const pagesRight = () => {
-    const iteration = props.grid.currentPage + 5
+    const iteration = props.grid.currentPage + 2
     return iteration > totalPages() ? totalPages() : iteration
 }
 
@@ -133,31 +133,13 @@ const selectedRowsLength = computed(() => props.grid.getCheckedRows().length)
     font-weight: bold;
 }
 
-/* Tablet responsive */
+/* Mobile/Tablet responsive */
 @media screen and (max-width: 768px) {
-    .spark-grid-pages {
-        justify-content: space-between;
-        width: 100%;
-    }
-
-    .spark-grid__select {
-        margin-left: 5px;
-        margin-right: 5px;
-    }
-
-    .spark-grid-selected-rows {
-        margin-left: 0;
-        width: 100%;
-        order: 3;
-    }
-}
-
-/* Mobile responsive */
-@media screen and (max-width: 480px) {
     .spark-grid-pages {
         flex-direction: column;
         align-items: center;
         gap: 12px;
+        width: 100%;
     }
 
     .spark-grid__page-details {

@@ -319,55 +319,54 @@
     -webkit-overflow-scrolling: touch;
 }
 
-/* Tablet breakpoint (768px and below) */
+/* HORIZONTAL_OVERFLOW mode — force horizontal scroll on mobile (grids without vertical-record class) */
 @media screen and (max-width: 768px) {
-    .spark-grid .spark-grid-datatable-footer {
-        flex-wrap: wrap;
-        gap: 10px;
-        padding: 10px;
+    .spark-grid:not(.spark-grid-responsive-vertical) .spark-grid-body > div {
+        min-width: max-content;
     }
 
-    .spark-grid .spark-grid-datatable-footer>* {
-        flex: none;
+    .spark-grid:not(.spark-grid-responsive-vertical) .grid-body > div {
+        min-width: max-content;
     }
 
-    .spark-grid .spark-grid-datatable-footer ul li>button {
-        min-width: 36px;
-        padding: 8px;
+    /* Protect grid rows from external flex overrides (e.g. .flex { flex-direction: column }) */
+    .spark-grid:not(.spark-grid-responsive-vertical) .spark-grid-datatable-body > .spark-grid-datatable-row,
+    .spark-grid:not(.spark-grid-responsive-vertical) .grid-body > .grid-row {
+        flex-direction: row !important;
     }
 
-    .spark-grid .spark-grid-datatable-header .spark-grid-datatable-header-cell {
-        padding: 10px 8px;
-        font-size: 11px;
+    .spark-grid:not(.spark-grid-responsive-vertical) .spark-grid-datatable-header,
+    .spark-grid:not(.spark-grid-responsive-vertical) .grid-header {
+        flex-direction: row !important;
     }
 
-    .spark-grid .spark-grid-datatable-cell {
-        font-size: 11px;
-        padding: 8px 6px;
+    .spark-grid:not(.spark-grid-responsive-vertical) .spark-grid-datatable-search-row,
+    .spark-grid:not(.spark-grid-responsive-vertical) .grid-search-row {
+        flex-direction: row !important;
     }
 
-    .spark-grid .spark-grid-datatable-search-row .spark-grid-datatable-search-row-cell {
-        padding: 8px;
+    .spark-grid:not(.spark-grid-responsive-vertical) .spark-grid-datatable-footer {
+        flex-direction: row !important;
     }
 }
 
-/* Mobile breakpoint (480px and below) */
-@media screen and (max-width: 480px) {
-    .spark-grid.grid-wrapper {
+/* Mobile/Tablet breakpoint (768px and below) — vertical card layout (VERTICAL_RECORD mode only) */
+@media screen and (max-width: 768px) {
+    .spark-grid-responsive-vertical.grid-wrapper {
         border-left: none;
         border-right: none;
     }
 
-    .spark-grid .spark-grid-body {
+    .spark-grid-responsive-vertical .spark-grid-body {
         background: transparent !important;
     }
 
-    .spark-grid .spark-grid-datatable-mobile-filters {
+    .spark-grid-responsive-vertical .spark-grid-datatable-mobile-filters {
         display: block;
         padding: 10px 0 6px;
     }
 
-    .spark-grid .spark-grid-datatable-mobile-filter-trigger {
+    .spark-grid-responsive-vertical .spark-grid-datatable-mobile-filter-trigger {
         display: inline-flex;
         align-items: center;
         gap: 8px;
@@ -382,18 +381,18 @@
         box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
     }
 
-    .spark-grid .spark-grid-datatable-mobile-filter-icon {
+    .spark-grid-responsive-vertical .spark-grid-datatable-mobile-filter-icon {
         display: inline-flex;
         width: 18px;
         height: 18px;
     }
 
-    .spark-grid .spark-grid-datatable-mobile-filter-icon svg {
+    .spark-grid-responsive-vertical .spark-grid-datatable-mobile-filter-icon svg {
         width: 18px;
         height: 18px;
     }
 
-    .spark-grid .spark-grid-datatable-mobile-filter-backdrop {
+    .spark-grid-responsive-vertical .spark-grid-datatable-mobile-filter-backdrop {
         position: fixed;
         inset: 0;
         background: rgba(15, 23, 42, 0.4);
@@ -404,7 +403,7 @@
         padding: 12px;
     }
 
-    .spark-grid .spark-grid-datatable-mobile-filter-dialog {
+    .spark-grid-responsive-vertical .spark-grid-datatable-mobile-filter-dialog {
         width: 100%;
         max-width: 520px;
         background: #ffffff;
@@ -416,7 +415,7 @@
         max-height: 85vh;
     }
 
-    .spark-grid .spark-grid-datatable-mobile-filter-header {
+    .spark-grid-responsive-vertical .spark-grid-datatable-mobile-filter-header {
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -425,13 +424,13 @@
         background: #f8fafc;
     }
 
-    .spark-grid .spark-grid-datatable-mobile-filter-title {
+    .spark-grid-responsive-vertical .spark-grid-datatable-mobile-filter-title {
         font-size: 14px;
         font-weight: 700;
         color: #0f172a;
     }
 
-    .spark-grid .spark-grid-datatable-mobile-filter-close {
+    .spark-grid-responsive-vertical .spark-grid-datatable-mobile-filter-close {
         border: none;
         background: transparent;
         font-size: 18px;
@@ -440,7 +439,7 @@
         padding: 4px;
     }
 
-    .spark-grid .spark-grid-datatable-mobile-filter-body {
+    .spark-grid-responsive-vertical .spark-grid-datatable-mobile-filter-body {
         padding: 16px;
         display: flex;
         flex-direction: column;
@@ -448,19 +447,19 @@
         overflow-y: auto;
     }
 
-    .spark-grid .spark-grid-datatable-mobile-filter-field {
+    .spark-grid-responsive-vertical .spark-grid-datatable-mobile-filter-field {
         display: flex;
         flex-direction: column;
         gap: 6px;
     }
 
-    .spark-grid .spark-grid-datatable-mobile-filter-field-label {
+    .spark-grid-responsive-vertical .spark-grid-datatable-mobile-filter-field-label {
         font-size: 12px;
         font-weight: 600;
         color: #475569;
     }
 
-    .spark-grid .spark-grid-datatable-mobile-filter-footer {
+    .spark-grid-responsive-vertical .spark-grid-datatable-mobile-filter-footer {
         padding: 12px 16px 16px;
         border-top: 1px solid #e2e8f0;
         background: #f8fafc;
@@ -468,7 +467,7 @@
         justify-content: flex-end;
     }
 
-    .spark-grid .spark-grid-datatable-mobile-filter-apply {
+    .spark-grid-responsive-vertical .spark-grid-datatable-mobile-filter-apply {
         border: 1px solid #cbd5f5;
         background: #3b82f6;
         color: #ffffff;
@@ -478,61 +477,48 @@
         cursor: pointer;
     }
 
-    .spark-grid .spark-grid-datatable-header,
-    .spark-grid .grid-header {
+    .spark-grid-responsive-vertical .spark-grid-datatable-header,
+    .spark-grid-responsive-vertical .grid-header {
         display: none !important;
     }
 
-    .spark-grid .spark-grid-datatable-search-row,
-    .spark-grid .grid-search-row {
+    .spark-grid-responsive-vertical .spark-grid-datatable-search-row,
+    .spark-grid-responsive-vertical .grid-search-row {
         display: none !important;
     }
 
-    .spark-grid .spark-grid-datatable-footer {
+    .spark-grid-responsive-vertical .spark-grid-datatable-footer {
         flex-direction: column;
         align-items: stretch;
         gap: 12px;
     }
 
-    .spark-grid .spark-grid-datatable-footer .spark-grid-pages,
-    .spark-grid .spark-grid-datatable-footer .grid-footer>div {
+    .spark-grid-responsive-vertical .spark-grid-datatable-footer .spark-grid-pages,
+    .spark-grid-responsive-vertical .spark-grid-datatable-footer .grid-footer>div {
         flex-direction: column;
         align-items: center;
         gap: 8px;
     }
 
-    .spark-grid .spark-grid-datatable-footer ul {
+    .spark-grid-responsive-vertical .spark-grid-datatable-footer ul {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
         gap: 4px;
     }
 
-    .spark-grid .spark-grid-datatable-footer ul li {
+    .spark-grid-responsive-vertical .spark-grid-datatable-footer ul li {
         display: inline-flex;
     }
 
-    .spark-grid .spark-grid-datatable-footer ul li>button {
+    .spark-grid-responsive-vertical .spark-grid-datatable-footer ul li>button {
         min-width: 40px;
         min-height: 40px;
         padding: 10px;
         font-size: 14px;
     }
 
-    .spark-grid .spark-grid-datatable-header .spark-grid-datatable-header-cell {
-        min-width: 100px;
-        white-space: nowrap;
-    }
-
-    .spark-grid .spark-grid-datatable-cell {
-        min-width: 100px;
-    }
-
-    .spark-grid .spark-grid-datatable-search-row .spark-grid-datatable-search-row-cell {
-        min-width: 100px;
-    }
-
-    .spark-grid .spark-grid-datatable-select {
+    .spark-grid-responsive-vertical .spark-grid-datatable-select {
         min-height: 40px;
         font-size: 14px;
     }
@@ -864,94 +850,65 @@
 }
 
 @media screen and (max-width: 768px) {
-    .spark-grid .grid-footer {
-        flex-wrap: wrap;
-        gap: 10px;
-        padding: 10px;
-    }
-
-    .spark-grid .grid-footer>* {
-        flex: none;
-    }
-
-    .spark-grid .grid-footer ul li>button {
-        min-width: 36px;
-        padding: 8px;
-    }
-
-    .spark-grid .grid-header .grid-header-cell {
-        padding: 10px 8px;
-        font-size: 11px;
-    }
-
-    .spark-grid .grid-cell {
-        font-size: 11px;
-        padding: 8px 6px;
-    }
-
-    .spark-grid .grid-search-row .grid-search-row-cell,
-    .spark-grid .grid-search-row .spark-grid-datatable-header-cell {
-        padding: 8px;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .spark-grid .grid-footer {
+    .spark-grid-responsive-vertical .grid-footer {
         flex-direction: column;
         align-items: stretch;
         gap: 12px;
     }
 
-    .spark-grid .grid-footer .spark-grid-pages,
-    .spark-grid .grid-footer>div {
+    .spark-grid-responsive-vertical .grid-footer .spark-grid-pages,
+    .spark-grid-responsive-vertical .grid-footer>div {
         flex-direction: column;
         align-items: center;
         gap: 8px;
     }
 
-    .spark-grid .grid-footer ul {
+    .spark-grid-responsive-vertical .grid-footer ul {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
         gap: 4px;
     }
 
-    .spark-grid .grid-footer ul li {
+    .spark-grid-responsive-vertical .grid-footer ul li {
         display: inline-flex;
     }
 
-    .spark-grid .grid-footer ul li>button {
+    .spark-grid-responsive-vertical .grid-footer ul li>button {
         min-width: 40px;
         min-height: 40px;
         padding: 10px;
         font-size: 14px;
     }
 
-    .spark-grid .grid-body,
-    .spark-grid .spark-grid-datatable-body {
+    .spark-grid-responsive-vertical .grid-body,
+    .spark-grid-responsive-vertical .spark-grid-datatable-body {
         display: flex;
         flex-direction: column;
         gap: 10px;
     }
 
-    .spark-grid .grid-row,
-    .spark-grid .spark-grid-datatable-row {
-        flex-direction: column;
+    .spark-grid-responsive-vertical .grid-row,
+    .spark-grid-responsive-vertical .spark-grid-datatable-row {
+        flex-wrap: wrap;
         border: 1px solid #ddd;
         border-radius: 8px;
         overflow: hidden;
         background: #fff;
     }
 
-    .spark-grid .spark-grid-datatable-row-action-bar {
+    .spark-grid-responsive-vertical .spark-grid-datatable-row-action-bar {
         display: flex !important;
+        flex: 1;
         justify-content: flex-end;
+        align-items: center;
+        order: 1;
         padding: 8px 10px;
         background: #f8fafc;
         border-bottom: 1px solid #e2e8f0;
     }
 
-    .spark-grid .spark-grid-datatable-row-action {
+    .spark-grid-responsive-vertical .spark-grid-datatable-row-action {
         display: inline-flex !important;
         align-items: center;
         justify-content: center;
@@ -966,19 +923,19 @@
         box-shadow: 0 2px 6px rgba(15, 23, 42, 0.2);
     }
 
-    .spark-grid .spark-grid-datatable-row-action-icon {
+    .spark-grid-responsive-vertical .spark-grid-datatable-row-action-icon {
         display: inline-flex;
         width: 18px;
         height: 18px;
     }
 
-    .spark-grid .spark-grid-datatable-row-action-icon svg {
+    .spark-grid-responsive-vertical .spark-grid-datatable-row-action-icon svg {
         width: 18px;
         height: 18px;
     }
 
-    .spark-grid .grid-cell,
-    .spark-grid .spark-grid-datatable-cell {
+    .spark-grid-responsive-vertical .grid-cell,
+    .spark-grid-responsive-vertical .spark-grid-datatable-cell {
         min-width: 100% !important;
         max-width: 100% !important;
         width: 100% !important;
@@ -991,28 +948,49 @@
         gap: 8px;
         align-items: center;
         padding: 10px 12px;
+        order: 2;
     }
 
-    .spark-grid .grid-cell::before,
-    .spark-grid .spark-grid-datatable-cell::before {
+    /* Selection cell (checkbox/radio) — compact header row */
+    .spark-grid-responsive-vertical .spark-grid-selection-cell {
+        min-width: auto !important;
+        max-width: auto !important;
+        width: auto !important;
+        flex-basis: auto !important;
+        flex: 0 0 auto !important;
+        display: flex !important;
+        align-items: center;
+        order: 0;
+        border-top: none;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 8px 12px;
+        background: #f8fafc;
+    }
+
+    .spark-grid-responsive-vertical .spark-grid-selection-cell::before {
+        content: none !important;
+    }
+
+    .spark-grid-responsive-vertical .grid-cell::before,
+    .spark-grid-responsive-vertical .spark-grid-datatable-cell::before {
         content: attr(data-label);
         font-weight: 600;
         color: #546e7a;
     }
 
-    .spark-grid .grid-cell[data-label=""]::before,
-    .spark-grid .spark-grid-datatable-cell[data-label=""]::before {
+    .spark-grid-responsive-vertical .grid-cell[data-label=""]::before,
+    .spark-grid-responsive-vertical .spark-grid-datatable-cell[data-label=""]::before {
         content: "";
     }
 
-    .spark-grid .grid-row>.grid-cell:first-child,
-    .spark-grid .grid-row>.spark-grid-datatable-cell:first-child,
-    .spark-grid .spark-grid-datatable-row>.spark-grid-datatable-cell:first-child,
-    .spark-grid .spark-grid-datatable-row>.grid-cell:first-child {
+    .spark-grid-responsive-vertical .grid-row>.grid-cell:first-child,
+    .spark-grid-responsive-vertical .grid-row>.spark-grid-datatable-cell:first-child,
+    .spark-grid-responsive-vertical .spark-grid-datatable-row>.spark-grid-datatable-cell:first-child,
+    .spark-grid-responsive-vertical .spark-grid-datatable-row>.grid-cell:first-child {
         border-top: none;
     }
 
-    .spark-grid .spark-grid-datatable-select {
+    .spark-grid-responsive-vertical .spark-grid-datatable-select {
         min-height: 40px;
         font-size: 14px;
     }

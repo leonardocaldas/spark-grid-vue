@@ -1,5 +1,5 @@
 <template>
-    <div class="grid-cell" data-label="Selecionar" :style="columnStyle()">
+    <div class="grid-cell spark-grid-selection-cell" data-label="Selecionar" :style="columnStyle()">
         <div class="checker">
             <span :class="{ 'checked': row._isChecked }">
                 <input type="checkbox" :name="row._uuid" :disabled="row._isCheckboxDisabled"

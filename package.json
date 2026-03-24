@@ -1,6 +1,6 @@
 {
     "name": "spark-grid-vue3",
-    "version": "0.0.77",
+    "version": "0.0.83",
     "description": "",
     "files": [
         "src"
@@ -24,6 +24,7 @@
         "@vue/test-utils": "^2.4.6",
         "@vue/compiler-sfc": "^3.5.10",
         "@vue/tsconfig": "^0.5.1",
+        "element-plus": "^2.7.0",
         "get-value": "^3.0.1",
         "happy-dom": "^15.10.2",
         "mitt": "^3.0.1",
@@ -40,6 +41,7 @@
     "peerDependencies": {
         "@imengyu/vue3-context-menu": "^1.4.2",
         "axios": "^1.7.7",
+        "element-plus": "^2.7.0",
         "get-value": "^3.0.1",
         "lodash": "^4.17.21",
         "uuid": "^10.0.0"
